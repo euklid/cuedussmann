@@ -71,54 +71,21 @@ char*** bestelldaten; //Daten, die nicht hidden sind, also die Bestelldaten
 char uid[6], pwd[6];
 //int main()
 //{
-//	char uid[5], pwd[5];
-//	printf("Herzlich willkommen. Ich bin ihr persönlicher Essensberater!\n \n");
-//	printf("Was ist ihre Benutzernummer: ");
-//	scanf("%s",uid);
-//	printf("Was ist ihr Passwort: ");
-//	scanf("%s",pwd);
-//	loginandcookie(uid,pwd);
-//	//////find("kalendera","<select name=\"sel_datum\" class=\"no_print\" onchange=\"document.form_sel_datum.submit()\">",12);
-//	kalwochen(uid, pwd);
-//	tagesauswahl();
-//	getsel_datums();
-//	createmenufiles(uid,pwd);
-//	gethiddenandbestellt();
-//	getdatensatz();
-//	getratingandbestelldaten();
-//	sendbestellung();
-//    //char text[] = "Guten Tagderefd\npens\0i";
-//    //char *cutten = cut(text, "t", 2, 2);
-//    //printf("%s",cutten);
-//    //find("testfile", "ent");
-//    ////printf("%s\n",frstnchr(text,7));
-//    //printf("%s", frstln("testfile"));
+	//printf("Herzlich willkommen. Ich bin ihr persönlicher Essensberater!\n \n");
+	//printf("Was ist ihre Benutzernummer: ");
+	//scanf("%s",uid);
+	//printf("Was ist ihr Passwort: ");
+	//scanf("%s",pwd);
+	//loginandcookie(uid,pwd);
+	//kalwochen(uid, pwd); 
+	//tagesauswahl();
+	//getsel_datums();
+	//createmenufiles(uid,pwd);
+	//gethiddenandbestellt();
+	//getdatensatz();
+	//getratingandbestelldaten();
+	//sendbestellung();
 //}
-
-/*
-char* frstln(const char inputfile[])
-{
-    FILE* input;
-    char c;
-    int charcount=2000;
-    input = fopen(inputfile, "r");
-    if (input == NULL) return NULL;
-//    while((c=fgetc(input)) != '\n')
-//    {
-//        charcount++;
-//    }
-    rewind(input);
-    char* output = (char*) malloc(charcount * sizeof(char));
-    fgets(output, charcount, input);
-    fclose(input);
-    //printf("%s",output);
-	output[strlen(output)]='\0';
-	//printf("%i",strlen(output));
-	if(output[strlen(output)-1]=='\n') output[strlen(output)-1]='\0';
-	return output;
-    
-} */
-
 
 char *strlwr(char *s)
 {
@@ -161,44 +128,37 @@ char *strlwr(char *s)
 // SUCH DAMAGE.
  */ //--> für die strlwr function
 
+/******************************************************************************
+ * The following routine is for cutting strings, does not include the start or*
+ * end delimiter, but all characters that are between them                    *
+ ******************************************************************************/
+
 char* cut2(char* inputstring, char* delim, int fieldstart, int fieldstop)
 {
 	int fieldcount=1;
 	int fldstart=fieldstart, fldstop=fieldstop;
 	char* pch;
 	char** fields;
-	//char* output;
 	int outputsize;
 	char inputcpy[strlen(inputstring)+1];
 	strcpy(inputcpy,inputstring);
-	//puts("hello");
 	pch=strtok(inputcpy, delim);
 	while (pch != NULL)
 	{
-		//printf("%s\n",pch);
 		pch = strtok (NULL,delim);
 		fieldcount++;
-		//printf("%i\n",fieldcount);
 	}
-	//puts("hillo");
 	fieldcount--;
-	//printf("%i",fieldcount);
 	if(fieldstop>fieldcount) fldstop=fieldcount;
 	if(fieldstart>fieldcount) return '\0';
 	if(fieldstart>fieldcount) return'\0';
 	if(fieldstart<=0) fldstart=1;
 	fields=(char**)calloc(fieldcount,sizeof(char*));
 	fieldcount=0;
-	//puts("hallo");
 	strcpy(inputcpy,inputstring);
-	//puts("hi");
 	pch=strtok(inputcpy,delim);
 	fields[0]=(char*)malloc(sizeof(char)*(strlen(pch)+1));
-	//puts("penis");
 	strcpy(fields[0],pch);
-	//printf("%s",fields[0]);
-	//puts("haha");
-	//printf("%s",fields[0]);
 	do
 	{
 		pch=strtok(NULL,delim);
@@ -212,13 +172,8 @@ char* cut2(char* inputstring, char* delim, int fieldstart, int fieldstop)
 	outputsize=fldstop-fldstart+1;
 	for(int i=fldstart-1; i<fldstop;i++)
 	{
-		//printf("%s\n",fields[i]);
 		outputsize+=strlen(fields[i]);
 	}
-	//printf("%i",outputsize);
-	//puts("foo");
-	//puts("bar");
-	//output=(char*)malloc(outputsize); 
 	strcpy(inputstring,fields[fldstart-1]);if(fldstart<fldstop) strcat(inputstring,delim);
 	for(int i=fldstart; i<fldstop-1;i++)
 	{
@@ -226,17 +181,7 @@ char* cut2(char* inputstring, char* delim, int fieldstart, int fieldstop)
 	}
 	if(fldstart<fldstop) strcat(inputstring,fields[fldstop-1]);
 	inputstring[outputsize-1]='\0';
-	//output=(char*)malloc(outputsize);
-	//for(int i=fldstart-1; i<fldstop-1;i++)
-	//{
-	//	strcat(output,fields[i]);strcat(output," ");	
-	//}
-	//strcat(output,fields[fldstop-1]);
-	//output[outputsize-1]='\0';
 	free(fields);
-	//inputstring=strcpy(inputstring, output);
-	//free(output);
-	//printf("%s",inputstring);
 	return inputstring;
 }
 
@@ -273,12 +218,9 @@ char* lstln(const char inputfile[])
         fgets(lastline, 2000, input);
     }
     fclose(input);
-    //printf("%s",lastline);
     char* lstline=lastline;
     free(lastline);
     return lstline;
-
-
 }
 
 char* frstnchr(char* input, int n)
@@ -299,142 +241,6 @@ char* frstnchr(char* input, int n)
     free(outputstr);
 }
 
-/******************************************************************************
- * The following routine is for cutting strings, does not include the start or*
- * end delimiter, but all characters that are between them                    *
- ******************************************************************************/
-
-/*char* cut2(char inputstring[], char* delim, int fieldstart, int fieldstop)
-{
-	int fieldcount=1;
-	int fldstart=fieldstart, fldstop=fieldstop;
-	char* pch;
-	char** fields;
-	char* output;
-	int outputsize;
-	char inputcpy[strlen(inputstring)+1];
-	strcpy(inputcpy,inputstring);
-	//puts("hello");
-	pch=strtok(inputcpy, delim);
-	while (pch != NULL)
-	{
-		//printf("%s\n",pch);
-		pch = strtok (NULL,delim);
-		fieldcount++;
-		//printf("%i\n",fieldcount);
-	}
-	//puts("hillo");
-	fieldcount--;
-	//printf("%i",fieldcount);
-	if(fieldstop>fieldcount) fldstop=fieldcount;
-	if(fieldstart>fieldcount) return '\0';
-	if(fieldstart>fieldcount) return'\0';
-	if(fieldstart<=0) fldstart=1;
-	fields=(char**)calloc(fieldcount,sizeof(char*));
-	fieldcount=0;
-	//puts("hallo");
-	strcpy(inputcpy,inputstring);
-	//puts("hi");
-	pch=strtok(inputcpy,delim);
-	fields[0]=(char*)malloc(sizeof(char)*(strlen(pch)+1));
-	//puts("penis");
-	strcpy(fields[0],pch);
-	//printf("%s",fields[0]);
-	//puts("haha");
-	//printf("%s",fields[0]);
-	do
-	{
-		pch=strtok(NULL,delim);
-		fieldcount++;
-		if(pch!=NULL) 
-		{
-			fields[fieldcount]=(char*)malloc(sizeof(char)*(strlen(pch)+1));
-			strcpy(fields[fieldcount],pch);
-		}
-	}while(pch!= NULL);
-	outputsize=fieldstop-fieldstart+1;
-	for(int i=fldstart-1; i<fldstop;i++)
-	{
-		//printf("%s\n",fields[i]);
-		outputsize+=strlen(fields[i]);
-	}
-	//printf("%i",outputsize);
-	//puts("foo");
-	//puts("bar");
-	output=(char*)malloc(outputsize); 
-	strcpy(output,fields[fldstart-1]);if(fldstart<fldstop) strcat(output,delim);
-	for(int i=fldstart; i<fldstop-1;i++)
-	{
-		strcat(output,fields[i]);strcat(output,delim);	
-	}
-	strcat(output,fields[fldstop-1]);
-	output[outputsize-1]='\0';
-	free(fields);
-	return output;	
-} */
-
-/*char* cut(char input[], const char delim[], int fieldstart, int fieldstop) // ICH bin im Arsch --> nun mit strtok schreiben!
-{
-	
-    int counter = 1;
-    bool began = false;
-    char* output;//free(output);
-    int maxlength;
-    int startpos=0;
-    int charcount=0;
-    int fldcount=1;
-    //printf("stringlenge %i\n",strlen(input));
-    //output = (char*) malloc(strlen(input));
-    int outputstart = -2;
-    for(int i=0;i<strlen(input);i++)
-    {
-		if(input[i]==delim[0]) fldcount++;
-
-		if((fldcount>=fieldstart) && (fldcount<=fieldstop) && (input[i]!=delim[0])) charcount++;
-		if(input[i]<32) break;
-	}
-
-	//printf("fotze %i\n",charcount);
-    output = (char*)malloc(sizeof(char*)*charcount);free(output);    output = (char*)malloc(sizeof(char*)*charcount);//printf("fotze %i\n",charcount);
-    //printf("Das ist outputs groeße: %i",sizeof(output));
-    for (int i = 0; i < strlen(input); i++)
-    {
-		//printf("%i \n",strlen(output));
-        if (outputstart != -2) outputstart++;
-        if ((input[i] == delim[0]))
-        {
-            counter++;
-        }
-        if (counter > fieldstop) 
-        {
-			output[outputstart]='\0';
-			break;
-		}
-		if(i-charcount>startpos) { output[outputstart]='\0';break;}
-		if((input[i]=='\n') || (input[i]=='\0')){ output[outputstart]=='\0';break;}
-
-        if ((counter == fieldstart) && (began == false))
-        {
-            began = true;
-            startpos=i;
-            //printf("startpos %i\n",startpos);
-            if (fieldstart != 1) outputstart = -1;
-            if (fieldstart == 1) outputstart = 0;
-        }
-        if ((counter >= fieldstart) && (outputstart >= 0))
-        {
-            output[outputstart] = input[i];
-            
-        }
-        //putchar(output[i-startpos-1]);
-    }
-    //printf("Das ist outputslenge: %i",strlen(output));
-    return output;
-    
-} */
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 
 int find(const char inputfile[], const char searchstring[], int linesafter)
 {
@@ -449,9 +255,7 @@ int find(const char inputfile[], const char searchstring[], int linesafter)
     {
         if (c == '\n') numlines++;
     }
-    //printf("%d\n", numlines);
     fclose(INPUT);
-    //printf("%d", numlines ); now it works --> go to toilet
 
     INPUT = fopen(inputfile, "r");
     char** lines;
@@ -459,86 +263,30 @@ int find(const char inputfile[], const char searchstring[], int linesafter)
     for (int i = 0; i < numlines; i++)
     {
         lines[i] = (char*) malloc(2000 * sizeof (char*));
-        //printf("test %i\n",i);
         fgets(lines[i], 2000, INPUT);
-    } //HOLY Shit: It WORKS! --> Implement finding a substring in those lines
-    //puts("testblablub");
-    //putchar(lines[4][2]);
-    
+    }     
     int foundlines[numlines];
     for (int i = 0; i < numlines; i++) 
     {
 		foundlines[i] = 0;
-		//printf("%s",lines[i]);
 	}
-    //printf("penis\n");
     for (int i = 0; i < numlines; i++)
     {
         int position;
         position = 0;
         int found = 0;
-		//printf("penis %i   \n",i);
-		//int platz = strlen(lines[i]) - strlen(searchstring);
 		if( (strlen(lines[i]) - strlen(searchstring)) >=0)
 		{
-			//puts("ficken");
 			if(strstr(lines[i],searchstring) != NULL)
 			{
-				//printf("pimmerle %i   \n",i);
 				everfound=1;
 				foundlines[i]=1;
 			}
 		}
-/*
-        //while (position <= platz)
-        //{
-			//if(position > platz) break;
-			
-            //if (searchstring[0] == lines[i][position])
-            //{
-                //int stillok = 1;
-                //for (int j = 0; j < strlen(searchstring); j++)
-					
-                    //if (stillok)
-                    //{
-                        //if (searchstring[j] == lines[i][position + j])
-                        //{
-							//printf("%i  ",strlen(lines[i]));
-							//printf("%i\n",i);
-                            //stillok = 1;
-                        //}
-                        //else
-                        //{
-                            //stillok = 0;
-                            //position++; //if not we'd have an infinite loop
-                            //break;
-                        //}
-                    //}
-                    
-
-                    //if ((stillok) && j == strlen(searchstring) - 1)
-                    //{
-                        //everfound = 1;
-                        //found = 1;
-                        //foundlines[i] = 1; //ab zum nächsten
-                        ////printf("%s",lines[i]);
-                        //position++;
-                    //}
-                    //if(position > platz) break;
-                //}
-
-            //}
-            //else position++;
-
-            //if (found) break;
-
-        //} */
     }
-    //puts("haben wirs geschafft?");
     //nun auf den linesafter Parameter eingehen
     for (int i = 0; i < numlines; i++)
     {
-        //printf("%i\n",foundlines[i]);
         if (foundlines[i] == 1)
         {
             if (i + linesafter < numlines)
@@ -561,10 +309,8 @@ int find(const char inputfile[], const char searchstring[], int linesafter)
     findfile = fopen("findoutput", "w");
     for (int i = 0; i < numlines; i++)
     {
-        //printf("%i\n",foundlines[i]);
         if ((foundlines[i] == 1) || (foundlines[i] == 2))
         {
-            //puts("in file schreiben");
             fputs(lines[i], findfile);
         }
     }
@@ -573,26 +319,10 @@ int find(const char inputfile[], const char searchstring[], int linesafter)
     //irgendwo,irgendwie die gefundenen zeilen speichern, sodass andere fkt.
     //darauf zugreifen können. :DONE
     free(lines);
-    //free(*lines);
-    
-    
-    //printf("Das ist linesafter: %i\n",linesafter);
-    
-    //    INPUT=fopen(inputfile, "r");
-    //    char stringtest[100];
-    //    for (int i=1; i<=numlines;i++)
-    //    {
-    //        fgets(stringtest, 99, INPUT); !!!!THIS works... use it as example
-    //        printf("%s",stringtest);
-    //    }
-    //     fclose(INPUT);
-    //     return 0;//alles crap--> nochma nachschauen wegen array of chars
     if (everfound)
         return 1;
     else
         return 0;
-
-
 }
 
 char* removeformattingsigns(char* input) //<-- remove html escape sequences
@@ -712,12 +442,7 @@ int loginandcookie(char* userid, char* passwd)
 
 int kalwochen(char* userid, char* passwd)
 {
-	//int numwochen=0;
-	//int startwoche;
-	//char* startwochenbuffer;
-	//startwochenbuffer=(char*)malloc(sizeof(char*)*4);
 	FILE* wochenliste;
-	//if(kalender==NULL) return 0;
 	find("kalendera","<select name=\"sel_datum\" class=\"no_print\" onchange=\"document.form_sel_datum.submit()\">",12);
 	find("findoutput","KW");
 	find("findoutput","selected=\"selected\"",12);
@@ -728,22 +453,10 @@ int kalwochen(char* userid, char* passwd)
 		if(c == '\n') anzwoche++;
 	}
 	fclose(wochenliste);
-	//wochenliste=fopen("findoutput","r");
-	//puts("test");
-	//fgets(buffer,130,wochenliste);
-	//buffer[strlen(buffer)-1]='\0';
 	char* puffer=(char*)malloc(150);
 	frstln(puffer,150,"findoutput");
-	//printf("%s\n",puffer);
-	//char*tmp=strdup(puffer);
 	cut2(puffer,":",2,2);	
-	//fclose(wochenliste);
-	//printf("%s \n",puffer);
 	cut2(puffer," ",1,1);
-	//free(puffer);
-	//printf("buffer is %s\n",puffer);
-	//startwochenbuffer[1]+=4;
-	//printf("pimmel %c\n",startwochenbuffer[1]);
 	for(int i=48; i<=53; i++)
 	{
 		if(puffer[0]==i) 
@@ -761,37 +474,25 @@ int kalwochen(char* userid, char* passwd)
 		}
 	}
 	printf("startwoche: %i und anzahlwochen: %i\n",startwoche,anzwoche);
-	//free(buffer);
-	free(puffer)	;
-	//free(puffer);
+	free(puffer);
 	return 1;		
 }
 
 void tagesauswahl()
 {
-	//puts("hallo");
 	setdates=(int**)calloc(anzwoche,sizeof(int*));
-	//int setdates[anzwoche][7];
 	for(int i=0; i<anzwoche;i++) setdates[i]=(int*)calloc(7,sizeof(int));
 	char janein1=32, janein3[7]; for(int i=0;i<7;i++) janein3[i]=32;
 	char janein2=32;
-	//int lauf1=0, lauf2=0, lauf3[]={0,0,0,0,0,0,0};
 	char wochentage[][11]={"Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"};
 	for(int i=0; i<anzwoche; i++)
 	{
 		janein1=32; for(int f=0;f<7;f++) janein3[f]=32; janein2=32;
-		//puts("hallihallo");
 		printf("Willst du in der %i. Woche bestellen? Bitte nur j oder n eingeben:", startwoche+i);
-		//puts("keinbock");
 		do
-		{ 	//lauf1++;
-			//puts("keinelust");
-			//scanf("%c",&janein1);
+		{ 	
 			getchar();
-			janein1=getchar(); //wait(5000);
-			
-			//puts("nanunana");
-			//if(lauf1==1)continue;
+			janein1=getchar();			
 			if(janein1=='n' || janein1=='j')
 			{
 				if(janein1=='n')
@@ -806,9 +507,8 @@ void tagesauswahl()
 					printf("Alles bestellen? Bitte nur j oder n eingeben:");
 					do
 					{
-						//lauf2++;
 						getchar();
-						scanf("%c",&janein2);//if(lauf2==1)continue;
+						scanf("%c",&janein2);
 						//usw.
 						if((janein2=='n') || (janein2=='j'))
 						{
@@ -825,15 +525,12 @@ void tagesauswahl()
 								{
 									do
 									{
-										//lauf3[k]++;
 										printf("Für %s bestellen? Bitte nur j oder n eingeben.:",wochentage[k]);
 										getchar();
 										scanf("%c",&janein3[k]);
-										//if(lauf3[k]==1)continue;
 										if((janein3[k]=='n') || (janein3[k]=='j'))
 										{
-											//puts("hi");
-											if(janein3[k]=='j') { setdates[i][k]=1;} //printf("%i",setdates[i][k]);}
+											if(janein3[k]=='j') { setdates[i][k]=1;}
 											else setdates[i][k]=0; 
 										} else printf("Falsche Eingabe! Nochmal bitte:");										
 									
@@ -848,26 +545,17 @@ void tagesauswahl()
 			} else puts("Falsche Eingabe! Nochmal bitte.");
 		}while((janein1!='n') && (janein1!='j')) ;
 	}
-	//printf("%i",setdates[0][0]);
 	
 }
 
 void getsel_datums()
 {
 	FILE* wochenliste;
-	//puts("hihi");
-	//wochenliste=fopen("findoutput","r");
-	//puts("ho");
-	char* buffer; //puts("duda"); 
+	char* buffer;
 	buffer=(char*)malloc(150*sizeof(char)); 
-	//puts("hihohehohehi");
-	//find("findoutput","selected=\"selected\"",anzwoche); //--> schon nach selected bla in kalwochen suchen :DONE Done
 	slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
 	for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11);
-	//puts("muhahaha");
-	//printf("%i",setdates[0][0]);
 	wochenliste=fopen("findoutput","r");
-	//puts("dreimalschwarzerkater");
 	for(int i=0;i<anzwoche;i++)
 	{
 		int bestellen=0;
@@ -876,14 +564,12 @@ void getsel_datums()
 		{
 			if(setdates[i][j]==1)
 			{
-				//printf("%i %i %i",i,j,setdates[i][j]);
 				bestellen=1;break;
 			}	
 		}
 		if(bestellen==1) 
 		{
 			strcpy(slynmbwochen[i],cut2(buffer,"\"",2,2)); //get silly numbers
-			//printf("%s\n",slynmbwochen[i]);
 		}
 		else strcpy(slynmbwochen[i],"0");
 	}	
@@ -903,11 +589,9 @@ void createmenufiles(char* userid, char* passwd)
 		strcpy(menufilename,"menu");
 		menunumber[0]=48+i; menunumber[1]='\0';
 		strcat(menufilename,menunumber); strcat(menufilename,"\0");
-		//printf("%s\n",menufilename) ;
 		menus[i]=fopen(menufilename, "w");
 		strcpy(postfield,"sel_datum=");
 		strcat(postfield,slynmbwochen[i]);
-		//printf("%s\n",postfield);
 		CURLcode ret;
 		CURL *hnd = curl_easy_init();
 		curl_easy_setopt(hnd, CURLOPT_WRITEDATA, menus[i]);
@@ -940,7 +624,6 @@ void gethiddenandbestellt()
 		char* puffer=(char*)malloc(sizeof(char)*50);
 		FILE* listhidden;
 		hidden[i]=(char**)calloc(35,sizeof(char*));
-		//printf("dudel\n");
 		for(int k=0;k<35;k++) {hidden[i][k]=(char*)malloc(50);strcpy(hidden[i][k],"\0");}
 		if(strlen(slynmbwochen[i])>2)
 		{
@@ -962,9 +645,7 @@ void gethiddenandbestellt()
 				tmp2=strcpy(tmp2,tmp);
 				strcat(puffer,"=");
 				strcat(puffer,cut2(tmp2,"\"",6,6));
-				//printf("%s\n",puffer);
 				hidden[i][j]=strcpy(hidden[i][j],puffer);
-				//printf("diedeldu %s\n",hidden[i][j]);
 			}
 			fclose(listhidden);
 		}
@@ -982,7 +663,6 @@ void gethiddenandbestellt()
 		char* puffer=(char*)malloc(sizeof(char)*50);
 		FILE* listgruen;
 		bergruen[i]=(char**)calloc(35,sizeof(char*));
-		//printf("dudel\n");
 		for(int k=0;k<35;k++) {bergruen[i][k]=(char*)malloc(50);strcpy(bergruen[i][k],"\0");}
 		if(strlen(slynmbwochen[i])>2)
 		{
@@ -1005,9 +685,7 @@ void gethiddenandbestellt()
 				tmp2=strcpy(tmp2,tmp);
 				strcat(puffer,"=");
 				strcat(puffer,cut2(tmp2,"\"",6,6));
-				//printf("%s\n",puffer);
 				bergruen[i][j]=strcpy(bergruen[i][j],puffer);
-				//printf("diedeldu %s\n",bergruen[i][j]);
 			}
 			fclose(listgruen);
 		}
@@ -1025,7 +703,6 @@ void gethiddenandbestellt()
 		char* puffer=(char*)malloc(sizeof(char)*50);
 		FILE* listgruend;
 		bergruend[i]=(char**)calloc(35,sizeof(char*));
-		//printf("dudel\n");
 		for(int k=0;k<35;k++) {bergruend[i][k]=(char*)malloc(50);strcpy(bergruend[i][k],"\0");}
 		if(strlen(slynmbwochen[i])>2)
 		{
@@ -1048,9 +725,7 @@ void gethiddenandbestellt()
 				tmp2=strcpy(tmp2,tmp);
 				strcat(puffer,"=");
 				strcat(puffer,cut2(tmp2,"\"",14,14));
-				//printf("%s\n",puffer);
 				bergruend[i][j]=strcpy(bergruend[i][j],puffer);
-				//printf("diedeldu %s\n",bergruend[i][j]);
 			}
 			fclose(listgruend);
 		}
@@ -1095,64 +770,75 @@ void getdatensatz()
 			strcpy(menufilename,"menu");
 			menunumber[0]=48+i; menunumber[1]='\0';
 			strcat(menufilename,menunumber); strcat(menufilename,"\0");
+			find(menufilename,"<table class=\"splanauflistung\"  summary=\"Speiseplan\">",10);
+			find("findoutput","</th>");
+			int numdays=0;
+			char c;
+			FILE* days;
+			days = fopen("findoutput","r");
+			while((c=fgetc(days))!= EOF )
+			{
+				if(c=='\n') numdays++;
+			}
+			fclose(days);
+			numdays--; //wegen &nbsp;
+			for(int f=numdays;f<7;f++) wirkbestellen[i][f]=0;
+			//--> diese Zeilen jetzt noch einbauen
 			find(menufilename,"class=\" auflistung");
 			FILE* auflistungen;
 			auflistungen=fopen("findoutput","r");
 			char* tmp=(char*)malloc(300);
-			for(int j=0;j<21;j++) //21, weil bis dahin es zum sonntag menü 3 geht
+			for(int j=0;j<numdays*3;j++) //21, weil bis dahin es zum sonntag menü 3 geht //fetter bug, was, wenn speiseplan nur bis freitag geht???!!!
 			{
 				fgets(tmp, 300,auflistungen);
-				if(wirkbestellen[i][j%7]==1)
+				if(wirkbestellen[i][j%numdays]==1)
 				{
 					if(strstr(tmp,"pointer")==NULL) 
 					{
 						
-						wirkbestellen[i][j%7]=0;
+						wirkbestellen[i][j%numdays]=0;
 						continue; //--> Ausschließen des Tages, da dieser schon bestellt ==> alle folgenden unbestellt oder gruen
 					}
 					if(strstr(tmp,"gruen pointer")!=NULL)
 					{
-						wirkbestellen[i][j%7]=0;
+						wirkbestellen[i][j%numdays]=0;
 						continue;
 					}
-					wirkbestellen[i][j%7]=1;
+					wirkbestellen[i][j%numdays]=1;
 				}
 			}
 			rewind(auflistungen);
-			for(int j=0; j<21;j++)
+			for(int j=0; j<numdays*3;j++)
 			{
 				fgets(tmp,300,auflistungen);
-				if(wirkbestellen[i][j%7]==1)
+				if(wirkbestellen[i][j%numdays]==1)
 				{
 					cut2(tmp,">",2,7); //hier muss noch fallunterscheidung wegen \n am ende rein!!!
-					if((tmp[0]=='\n') &&(j<7)) {wirkbestellen[i][j%7]=0; continue;}
-					if((tmp[0]=='\n') && (j/7==1)){continue;} //--> die leeren Menü2s bleiben '\0'
-					strcpy(wocheplustagplusdaten[i][j%7][3*(j/7)],tmp); //Menünamen abspeichern, damit man nach ihm in den folgenden Zeilen suchen kann, damit man die restlichen Daten ermitteln kann
-					//printf("%i %i %s",i,j,wocheplustagplusdaten[i][j%7][3*(j/7)]); //TODO: '\n' am Ende der Zeile löschen ('\r' auch(?) )
+					if((tmp[0]=='\n') &&(j<numdays)) {wirkbestellen[i][j%numdays]=0; continue;}
+					if((tmp[0]=='\n') && (j/numdays==1)){continue;} //--> die leeren Menü2s bleiben '\0'
+					strcpy(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)],tmp); //Menünamen abspeichern, damit man nach ihm in den folgenden Zeilen suchen kann, damit man die restlichen Daten ermitteln kann
+					 //TODO: '\n' am Ende der Zeile löschen ('\r' auch(?) )
 				}
 			}
-			//free(tmp);//Nun weiß man die Tage, für welche MENÜS bestellt müssen, man weiß nicht, wo Desserts bestellt werden müssen 
+			//Nun weiß man die Tage, für welche MENÜS bestellt müssen, man weiß nicht, wo Desserts bestellt werden müssen 
 			fclose(auflistungen);
 			FILE* essendata;
-			for(int j=0; j<21;j++)
+			for(int j=0; j<numdays*3;j++)
 			{
-				if(wirkbestellen[i][j%7]==1)
+				if(wirkbestellen[i][j%numdays]==1)
 				{
-					if(strlen(wocheplustagplusdaten[i][j%7][3*(j/7)])>2) //--> Ausschließen, dass für ein leeres Menü 2 Daten gesammelt werden sollen
+					if(strlen(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)])>2) //--> Ausschließen, dass für ein leeres Menü 2 Daten gesammelt werden sollen
 					{
-						find(menufilename,wocheplustagplusdaten[i][j%7][3*(j/7)],2); //Suche nach Zeile über den Essensnamen
+						find(menufilename,wocheplustagplusdaten[i][j%numdays][3*(j/numdays)],2); //Suche nach Zeile über den Essensnamen
 						find("findoutput","<input type=\"radio\" name=\"rad_");
 						essendata=fopen("findoutput","r");
 						fgets(tmp, 300, essendata);
 						cut2(tmp,"\"",4,4);
-						strcpy(wocheplustagplusdaten[i][j%7][3*(j/7)+1],tmp);
-						//printf("%s",wocheplustagplusdaten[i][j%7][3*(j/7)+1]);
+						strcpy(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)+1],tmp);
 						rewind(essendata);
 						fgets(tmp,300, essendata);
 						cut2(tmp,"\"",6,6);
-						strcpy(wocheplustagplusdaten[i][j%7][3*(j/7)+2], tmp);
-						//wocheplustagplusdaten[i][j%7][3*(j/7)+2][strlen(wocheplustagplusdaten[i][j%7][3*(j/7)+2])-1]='\0';
-						//printf("%s",wocheplustagplusdaten[i][j%7][3*(j/7)+2]);
+						strcpy(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)+2], tmp);
 						fclose(essendata);	
 					}
 				}
@@ -1169,7 +855,6 @@ void getdatensatz()
 void getratingandbestelldaten()
 {
 	FILE* ratinglist;
-	//ratinglist=fopen("ratings","a+"); //nochmal wegen anhängen modus nachschauen!!
 	float ratings[anzwoche][7][3]; //--> stores ratings for foods
 	char** hackstring;
 	for(int i=0; i<anzwoche;i++)
@@ -1258,29 +943,6 @@ void getratingandbestelldaten()
 							strcpy(hackstring[numwords-1],"\0");
 						}
 					}
-					//nun die neuen &quot; entfernen, analog zu &amp; ???
-					//for(int k=0;k<numwords;k++) //nun die "&quot;" s entfernen
-					//{
-						//if(strstr(hackstring[k],"&quot;")!=NULL)
-						//{
-							//printf("Das ist der zu kürzende String: %s",hackstring[k]);
-							////for(int m=k;m<numwords-1;m++)
-							////{
-								////strcpy(hackstring[m],hackstring[m+1]);
-							////} //Todo: keine stringverschiebung in den Arrays, sondern Buchstabenverschiebung!
-							//for(int m=0;m<strlen(hackstring[k]-1-6);m++)
-							//{
-								//for(int l=0; l<6;l++
-							//}
-							//strcpy(hackstring[numwords-1],"\0");
-						//} //TODO hier noch Baustelle
-					//} // TODO Also: es stehen ja meistens zwei quots, d.h. auch dass ein string, der zutatquotzutat ohne leerzeichen ist, aufgesplittet werden muss 
-					  // --> daher muss überprüft werden, ob ein String bereits leer ist, sodass in diesem die neu entstandene Zutat hineingeschrieben werden kann
-					  // --> sollte ich daher vielleicht die Anzahl der Hackstrings schon vorher etwas vergrößern? Nein! Der String wird in ein '""' übersetzt!
-					  // --> nur noch überlegen wie:
-					  // --> Achtung: es werden dadurch eigennamen zerstört, da der ganze quot string überschrieben wird.
-					//für adjektive und den ganzen Rest folgende Idee: alles was jetzt "direkt" hintereinander ist, wird geconcatenated, der Rest
-					//mit "\0" überschrieben.
 					int start=0;
 					int count=0;
 					while(count<numwords)
@@ -1303,7 +965,7 @@ void getratingandbestelldaten()
 					int summand=0;
 					char* bewertung=(char*)malloc(5); strcpy(bewertung,"\0");
 					int foodcount=0;
-					char* alllow;//=(char*)malloc(70);strcpy(alllow,"\0");
+					char* alllow;
 					char* storing=(char*)malloc(100); strcpy(storing,"\0");
 					for(int k=0; k<numwords;k++)
 					{
@@ -1373,21 +1035,18 @@ void getratingandbestelldaten()
 					strcpy(bestelldaten[i][j],wocheplustagplusdaten[i][j][1]);
 					strcat(bestelldaten[i][j],"=");
 					strcat(bestelldaten[i][j],wocheplustagplusdaten[i][j][2]);
-					//strcat(bestelldaten[i][j],"\0");
 				}
 				if((ratings[i][j][1]>=ratings[i][j][0]) && (ratings[i][j][1]>=ratings[i][j][2]))
 				{
 					strcpy(bestelldaten[i][j],wocheplustagplusdaten[i][j][4]);
 					strcat(bestelldaten[i][j],"=");
 					strcat(bestelldaten[i][j],wocheplustagplusdaten[i][j][5]);
-					//strcat(bestelldaten[i][j],"\0");
 				}
 				if((ratings[i][j][2]>=ratings[i][j][1]) && (ratings[i][j][2]>=ratings[i][j][0])) 
 				{
 					strcpy(bestelldaten[i][j],wocheplustagplusdaten[i][j][7]);
 					strcat(bestelldaten[i][j],"=");
 					strcat(bestelldaten[i][j],wocheplustagplusdaten[i][j][8]);
-					//strcat(bestelldaten[i][j],"\0");
 				}
 			}
 		}
@@ -1628,7 +1287,6 @@ void sendbestellung()//hier muss sowohl das Senden der daten für die Woche, als
 			free(newhidden);
 			free(tmp);
 			free(tmp2);
-			//puts("liesmich");
 			printf("Das ist der zweite Postcode: %s",postfield);
 		}	
 		
