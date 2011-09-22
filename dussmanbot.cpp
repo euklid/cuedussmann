@@ -68,7 +68,8 @@ char*** bergruend; //der speichert die Desserts :-)
 int ** wirkbestellen; //Für welche Tage wirklich bestellt werden soll
 char*** bestelldaten; //Daten, die nicht hidden sind, also die Bestelldaten
 
-char uid[6], pwd[6];
+char uid[6]="", pwd[6]="";
+
 //int main()
 //{
 	//printf("Herzlich willkommen. Ich bin ihr persönlicher Essensberater!\n \n");
