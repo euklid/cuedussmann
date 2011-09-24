@@ -40,6 +40,7 @@
  *
  */
  
+namespace core {
 int loginandcookie(char* userid, char* passwd);
 int kalwochen(char* userid, char* passwd);
 void tagesauswahl();
@@ -242,7 +243,6 @@ char* frstnchr(char* input, int n)
     free(outputstr);
 }
 
-
 int find(const char inputfile[], const char searchstring[], int linesafter)
 {
     FILE *INPUT; //File-Pointer
@@ -389,7 +389,7 @@ char* removeformattingsigns(char* input) //<-- remove html escape sequences
 	
 	while(strstr(output,"&quot;")!=NULL)
 	{
-		int position=0;
+                int position=0;
 		char* pointchar;
 		pointchar=strstr(output,"&quot;");
 		while(&output[position]!=pointchar)
@@ -441,43 +441,43 @@ int loginandcookie(char* userid, char* passwd)
 	
 }
 
-int kalwochen(char* userid, char* passwd)
-{
-	FILE* wochenliste;
-	find("kalendera","<select name=\"sel_datum\" class=\"no_print\" onchange=\"document.form_sel_datum.submit()\">",12);
-	find("findoutput","KW");
-	find("findoutput","selected=\"selected\"",12);
-	wochenliste=fopen("findoutput","r");
-	char c;
-	while((c=fgetc(wochenliste)) != EOF)
-	{
-		if(c == '\n') anzwoche++;
-	}
-	fclose(wochenliste);
-	char* puffer=(char*)malloc(150);
-	frstln(puffer,150,"findoutput");
-	cut2(puffer,":",2,2);	
-	cut2(puffer," ",1,1);
-	for(int i=48; i<=53; i++)
-	{
-		if(puffer[0]==i) 
-		{
-			startwoche=10*(i-48);
-			break;
-		}
-	}
-	for(int i=48;i<=57; i++)
-	{
-		if(puffer[1]==i)
-		{
-			startwoche+=(i-48);
-			break;
-		}
-	}
-	printf("startwoche: %i und anzahlwochen: %i\n",startwoche,anzwoche);
-	free(puffer);
-	return 1;		
-}
+/*//int kalwochen(char* userid, char* passwd)
+//{
+//	FILE* wochenliste;
+//	find("kalendera","<select name=\"sel_datum\" class=\"no_print\" onchange=\"document.form_sel_datum.submit()\">",12);
+//	find("findoutput","KW");
+//	find("findoutput","selected=\"selected\"",12);
+//	wochenliste=fopen("findoutput","r");
+//	char c;
+//	while((c=fgetc(wochenliste)) != EOF)
+//	{
+//		if(c == '\n') anzwoche++;
+//	}
+//	fclose(wochenliste);
+//	char* puffer=(char*)malloc(150);
+//	frstln(puffer,150,"findoutput");
+//	cut2(puffer,":",2,2);
+//	cut2(puffer," ",1,1);
+//	for(int i=48; i<=53; i++)
+//	{
+//		if(puffer[0]==i)
+//		{
+//			startwoche=10*(i-48);
+//			break;
+//		}
+//	}
+//	for(int i=48;i<=57; i++)
+//	{
+//		if(puffer[1]==i)
+//		{
+//			startwoche+=(i-48);
+//			break;
+//		}
+//	}
+//	printf("startwoche: %i und anzahlwochen: %i\n",startwoche,anzwoche);
+//	free(puffer);
+//	return 1;
+//} */
 
 void tagesauswahl()
 {
@@ -549,67 +549,67 @@ void tagesauswahl()
 	
 }
 
-void getsel_datums()
-{
-	FILE* wochenliste;
-	char* buffer;
-	buffer=(char*)malloc(150*sizeof(char)); 
-	slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
-	for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11);
-	wochenliste=fopen("findoutput","r");
-	for(int i=0;i<anzwoche;i++)
-	{
-		int bestellen=0;
-		fgets(buffer, 150, wochenliste);
-		for(int j=0;j<7;j++)
-		{
-			if(setdates[i][j]==1)
-			{
-				bestellen=1;break;
-			}	
-		}
-		if(bestellen==1) 
-		{
-			strcpy(slynmbwochen[i],cut2(buffer,"\"",2,2)); //get silly numbers
-		}
-		else strcpy(slynmbwochen[i],"0");
-	}	
-	fclose(wochenliste);	
-}
+/*//void getsel_datums()
+//{
+//	FILE* wochenliste;
+//	char* buffer;
+//	buffer=(char*)malloc(150*sizeof(char));
+//	slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
+//	for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11);
+//	wochenliste=fopen("findoutput","r");
+//	for(int i=0;i<anzwoche;i++)
+//	{
+//		int bestellen=0;
+//		fgets(buffer, 150, wochenliste);
+//		for(int j=0;j<7;j++)
+//		{
+//			if(setdates[i][j]==1)
+//			{
+//				bestellen=1;break;
+//			}
+//		}
+//		if(bestellen==1)
+//		{
+//			strcpy(slynmbwochen[i],cut2(buffer,"\"",2,2)); //get silly numbers
+//		}
+//		else strcpy(slynmbwochen[i],"0");
+//	}
+//	fclose(wochenliste);
+//}*/
 
-void createmenufiles(char* userid, char* passwd)
-{
-	FILE* menus[anzwoche];
-	char postfield[25];
-	char menufilename[8];
-	char menunumber[2];
-	for(int i=0;i<anzwoche;i++)
-	{
-		if(strlen(slynmbwochen[i])>2)
-		{
-		strcpy(menufilename,"menu");
-		menunumber[0]=48+i; menunumber[1]='\0';
-		strcat(menufilename,menunumber); strcat(menufilename,"\0");
-		menus[i]=fopen(menufilename, "w");
-		strcpy(postfield,"sel_datum=");
-		strcat(postfield,slynmbwochen[i]);
-		CURLcode ret;
-		CURL *hnd = curl_easy_init();
-		curl_easy_setopt(hnd, CURLOPT_WRITEDATA, menus[i]);
-		curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
-		curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=1;3");
-		curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
-		curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL); 
-		curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
-	 	curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
-		curl_easy_setopt(hnd, CURLOPT_COOKIEFILE, "Cookiedatei");
-		curl_easy_setopt(hnd, CURLOPT_COOKIEJAR, NULL);
-		ret = curl_easy_perform(hnd);
-		curl_easy_cleanup(hnd);
-		fclose(menus[i]);
-		} else continue;
-	}
-}
+/*//void createmenufiles(char* userid, char* passwd)
+//{
+//	FILE* menus[anzwoche];
+//	char postfield[25];
+//	char menufilename[8];
+//	char menunumber[2];
+//	for(int i=0;i<anzwoche;i++)
+//	{
+//		if(strlen(slynmbwochen[i])>2)
+//		{
+//		strcpy(menufilename,"menu");
+//		menunumber[0]=48+i; menunumber[1]='\0';
+//		strcat(menufilename,menunumber); strcat(menufilename,"\0");
+//		menus[i]=fopen(menufilename, "w");
+//		strcpy(postfield,"sel_datum=");
+//		strcat(postfield,slynmbwochen[i]);
+//		CURLcode ret;
+//		CURL *hnd = curl_easy_init();
+//		curl_easy_setopt(hnd, CURLOPT_WRITEDATA, menus[i]);
+//		curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
+//		curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=1;3");
+//		curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
+//		curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
+//		curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
+//	 	curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
+//		curl_easy_setopt(hnd, CURLOPT_COOKIEFILE, "Cookiedatei");
+//		curl_easy_setopt(hnd, CURLOPT_COOKIEJAR, NULL);
+//		ret = curl_easy_perform(hnd);
+//		curl_easy_cleanup(hnd);
+//		fclose(menus[i]);
+//		} else continue;
+//	}
+//} */
 
 void gethiddenandbestellt()
 {
@@ -857,7 +857,7 @@ void getratingandbestelldaten()
 {
 	FILE* ratinglist;
 	float ratings[anzwoche][7][3]; //--> stores ratings for foods
-	char** hackstring;
+        char** hackstring;
 	for(int i=0; i<anzwoche;i++)
 	{
 		for(int j=0;j<7;j++)
@@ -1295,4 +1295,5 @@ void sendbestellung()//hier muss sowohl das Senden der daten für die Woche, als
 	free(postfield);
 	free(menunumber);
 	free(menufilename);
+}
 }
