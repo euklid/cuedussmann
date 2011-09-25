@@ -10,9 +10,24 @@ cuedussmann::cuedussmann(QWidget *parent) :
 {
     setupUi(this);
     loadPWDUID();
-    //loginandcookie(uid, pwd);
+   // printf("%s und %s",uid ,pwd);//formatting problem with uid and pwd --> simplify on end of loadPWUID
+    while(loginandcookie(uid, pwd)==0)
+    {
+        QMessageBox msg;
+        msg.setText("Falsche Nutzernummer/Passwort Kombination");
+        msg.setWindowTitle("Fehler beim Login");
+        //msg.setStandardButtons(QMessageBox::Abort);
+        msg.addButton("Benutzername und Passwort neu setzen",QMessageBox::AcceptRole);
+        int ret = msg.exec();
+        if(ret==QMessageBox::AcceptRole)
+        {
+            cuedussmann::on_actionUID_PWD_ndern_triggered();
+        }
+    }
     kalwochen();
     getsel_datums();
+    createmenufiles();
+    //printf("Startwoche %i , Anzwoche %i",startwoche, anzwoche);
     setcombobox(startwoche, startwoche+anzwoche-1);
     parsemenufile(0);
     connect(comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(parsemenufile(int)));
@@ -53,9 +68,11 @@ cuedussmann::cuedussmann(QWidget *parent) :
     else
     {
         fgets(uid,6,pwdfile);
-        //uid[4]='\0';
+        strcpy(uid,qPrintable(QString::fromAscii(uid).simplified()));
+        uid[4]='\0';
         fgets(pwd,5,pwdfile);
-        //pwd[4]='\0';
+        strcpy(pwd,qPrintable(QString::fromAscii(pwd).simplified()));
+        pwd[4]='\0';
         if(QString::fromAscii(uid).toInt()<1000 || QString::fromAscii(uid).toInt()>9999 || QString::fromAscii(pwd).toInt()<1000 || QString::fromAscii(pwd).toInt()>9999)
         {
             QMessageBox msg;
@@ -82,8 +99,8 @@ cuedussmann::cuedussmann(QWidget *parent) :
     PwduiDialog *dialog= new PwduiDialog(this,QString::fromAscii(uid).toInt(), QString::fromAscii(pwd).toInt());
     if( dialog->exec())
     {
-        strcpy(uid,qPrintable(dialog->lineEdit->text()));
-        strcpy(pwd,qPrintable(dialog->lineEdit_2->text()));
+        strcpy(uid,qPrintable(dialog->lineEdit->text().simplified()));
+        strcpy(pwd,qPrintable(dialog->lineEdit_2->text().simplified()));
         FILE* pwdfile;
         pwdfile=fopen("pwfile","w");
         fputs(strcat(uid,"\n"),pwdfile);
@@ -151,6 +168,7 @@ cuedussmann::cuedussmann(QWidget *parent) :
 {
     for(int i=startweek; i<=endweek; i++)
     {
+        //printf("%i",i);
         comboBox->addItem(QString("Woche ")+QString::number(i)); //Therefore index 0 is standig for startweek, its slynumber can be access then by slynumber[0]
     }
 }

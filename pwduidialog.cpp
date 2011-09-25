@@ -12,9 +12,9 @@ PwduiDialog::PwduiDialog(QWidget *parent, int u, int p) :
     }
     lineEdit->setMaxLength(4);
     lineEdit_2->setMaxLength(4);
-    QRegExp regExp("[1-9]{4}");
+    QRegExp regExp("[1-9]{1}[0-9]{2,4}");
     lineEdit->setValidator(new QRegExpValidator(regExp, this));
-    QRegExp regExp2("[1-9]{4}");
+    QRegExp regExp2("[1-9]{1}[0-9]{2,4}");
     lineEdit_2->setValidator(new QRegExpValidator(regExp2,this));
 }
 

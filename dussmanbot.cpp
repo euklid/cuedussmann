@@ -436,7 +436,8 @@ int loginandcookie(char* userid, char* passwd)
 	ret = curl_easy_perform(hnd);
 	curl_easy_cleanup(hnd);
 	fclose(essen);
-	return (int)ret;
+        if(find("kalendera","falsches Passwort")) return 0; else return 1;
+        //return (int)ret;
 	
 	
 }
