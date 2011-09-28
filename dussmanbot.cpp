@@ -50,6 +50,7 @@ void gethiddenandbestellt();
 void getdatensatz();
 void getratingandbestelldaten();
 void sendbestellung();
+void logout();
 char* frstln(char* dest, int size, char inputfile[]);
 char* lstln(const char inputfile[]);
 char* frstnchr(char* input, int n);
@@ -538,16 +539,13 @@ void tagesauswahl()
 									
 									}while((janein3[k]!='j') && (janein3[k]!='n'));
 								}
-							}
-							
+							}	
 						} else puts("Falsche Eingabe! Nochmal bitte.");
 					}while((janein2!='n') && (janein2!='j'));
-				}
-				
+				}	
 			} else puts("Falsche Eingabe! Nochmal bitte.");
 		}while((janein1!='n') && (janein1!='j')) ;
-	}
-	
+	}	
 }
 
 /*//void getsel_datums()
@@ -1297,4 +1295,26 @@ void sendbestellung()//hier muss sowohl das Senden der daten für die Woche, als
 	free(menunumber);
 	free(menufilename);
 }
+
+void logout()
+{
+    //CURLcode ret;
+    CURL *hnd = curl_easy_init();
+    //curl_easy_setopt(hnd2, CURLOPT_WRITEDATA, bestbest2[i]);
+    curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
+    curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?a=akt_logout");
+    curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
+    curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
+    //curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
+   // curl_easy_setopt(hnd2, CURLOPT_REFERER, "http://dussmann-lpf.rcs.de/index.php?m=150;0;1;3");
+    curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
+    curl_easy_setopt(hnd, CURLOPT_COOKIEFILE, "Cookiedatei");
+    curl_easy_setopt(hnd, CURLOPT_COOKIEJAR, NULL);
+    //ret= curl_easy_perform(hnd);
+    curl_easy_cleanup(hnd);
+
 }
+
+}
+
+

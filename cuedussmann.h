@@ -8,14 +8,31 @@ class cuedussmann : public QMainWindow, public Ui::cuedussmann
     Q_OBJECT
 
 public:
-    explicit cuedussmann(QWidget *parent = 0);
+    explicit cuedussmann(QWidget *parent = 0);;
 
 private slots:
 
     void on_actionUID_PWD_ndern_triggered();
     void parsemenufile(int itemindex);
 
+    void on_checkBox_8_clicked();
+
+    void on_checkBox_clicked();
+
+    void on_checkBox_2_clicked();
+
+    void on_checkBox_3_clicked();
+
+    void on_checkBox_4_clicked();
+
+    void on_checkBox_5_clicked();
+
+    void on_checkBox_6_clicked();
+
+    void on_checkBox_7_clicked();
+
 private:
+    void initialize();
     int loadPWDUID();
     int kalwochen();
     void getsel_datums();

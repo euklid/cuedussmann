@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>cuedussmann</class>
  <widget class="QMainWindow" name="cuedussmann">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,8 +26,8 @@
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>30</y>
+      <x>10</x>
+      <y>70</y>
       <width>1001</width>
       <height>311</height>
      </rect>
@@ -148,112 +151,115 @@
     </column>
     <item row="0" column="0">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
      <property name="font">
       <font>
        <pointsize>9</pointsize>
       </font>
      </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+     </property>
     </item>
     <item row="0" column="1">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="0" column="2">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="0" column="3">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="0" column="4">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="0" column="5">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="0" column="6">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="1" column="0">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="1" column="1">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="1" column="2">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="1" column="3">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="1" column="4">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="1" column="5">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="1" column="6">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="2" column="0">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="2" column="1">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="2" column="2">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="2" column="3">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="2" column="4">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="2" column="5">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
     <item row="2" column="6">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </item>
    </widget>
@@ -268,6 +274,147 @@
     </property>
     <property name="currentIndex">
      <number>-1</number>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>50</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
+    </property>
+    <property name="text">
+     <string>bestellen</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_2">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>50</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
+    </property>
+    <property name="text">
+     <string>bestellen</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_3">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>50</y>
+      <width>96</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
+    </property>
+    <property name="text">
+     <string>bestellen</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_4">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>50</y>
+      <width>96</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
+    </property>
+    <property name="text">
+     <string>bestellen</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_5">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>50</y>
+      <width>96</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
+    </property>
+    <property name="text">
+     <string>bestellen</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_6">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>50</y>
+      <width>96</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
+    </property>
+    <property name="text">
+     <string>bestellen</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_7">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>50</y>
+      <width>96</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
+    </property>
+    <property name="text">
+     <string>bestellen</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_8">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>121</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Für alle Tage der ausgewählten Woche bestellen, wo noch keine Bestellung erfolgt ist.</string>
+    </property>
+    <property name="text">
+     <string>alles bestellen</string>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="tristate">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>

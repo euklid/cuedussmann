@@ -9,31 +9,11 @@ cuedussmann::cuedussmann(QWidget *parent) :
     QMainWindow(parent)
 {
     setupUi(this);
-    loadPWDUID();
-   // printf("%s und %s",uid ,pwd);//formatting problem with uid and pwd --> simplify on end of loadPWUID
-    while(loginandcookie(uid, pwd)==0)
-    {
-        QMessageBox msg;
-        msg.setText("Falsche Nutzernummer/Passwort Kombination");
-        msg.setWindowTitle("Fehler beim Login");
-        //msg.setStandardButtons(QMessageBox::Abort);
-        msg.addButton("Benutzername und Passwort neu setzen",QMessageBox::AcceptRole);
-        int ret = msg.exec();
-        if(ret==QMessageBox::AcceptRole)
-        {
-            cuedussmann::on_actionUID_PWD_ndern_triggered();
-        }
-    }
-    kalwochen();
-    getsel_datums();
-    createmenufiles();
-    //printf("Startwoche %i , Anzwoche %i",startwoche, anzwoche);
-    setcombobox(startwoche, startwoche+anzwoche-1);
-    parsemenufile(0);
-    connect(comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(parsemenufile(int)));
+    initialize();
+    connect(comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(parsemenufile(int))); //combobox must be connected with the checkboxes, to set them checked or not, the checkboxes must be connected with the cell clicked functions...
     //TODO:
-    /* now the menufiles should be downloaded and BE PARSED, so that the actual week is shown in the table. The combobox must
-     * get its entries
+    /* now the menufiles should be downloaded (OK) and BE PARSED (OK), so that the actual week is shown in the table(OK). The combobox must
+     * get its entries (OK)
      *
      * implementation for ordering only selected days must be written, and how to select some days
      *
@@ -45,7 +25,41 @@ cuedussmann::cuedussmann(QWidget *parent) :
      */
 }
 
- int cuedussmann::loadPWDUID()
+void cuedussmann::initialize()
+{
+    loadPWDUID();
+    /*while(loginandcookie(uid, pwd)==0)
+    {
+        QMessageBox msg;
+        msg.setText("Falsche Nutzernummer/Passwort Kombination");
+        msg.setWindowTitle("Fehler beim Login");
+        msg.addButton("Benutzername und Passwort neu setzen",QMessageBox::AcceptRole);
+        int ret = msg.exec();
+        if(ret==QMessageBox::AcceptRole)
+        {
+            cuedussmann::on_actionUID_PWD_ndern_triggered();
+        }
+    }*/
+    kalwochen();
+    getsel_datums();
+    /*createmenufiles();*/
+    setdates=(int**)calloc(anzwoche,sizeof(int*));
+    wirkbestellen=(int**)calloc(anzwoche,sizeof(int*));
+    for(int i = 0; i<anzwoche; i++)
+    {
+        setdates[i]=(int*)calloc(7,sizeof(int));
+        wirkbestellen[i]=(int*)calloc(7,sizeof(int));
+        for(int j = 0; j<7; j++)
+        {
+            setdates[i][j]=0;
+            wirkbestellen[i][j]=0;
+        }
+    }
+    setcombobox(startwoche, startwoche+anzwoche-1);
+    parsemenufile(0); //TODO: check or uncheck checkboxes depending on the chosen week
+}
+
+int cuedussmann::loadPWDUID()
 {
     FILE* pwdfile;
     if(((pwdfile=fopen("pwfile","r"))==NULL))
@@ -53,11 +67,9 @@ cuedussmann::cuedussmann(QWidget *parent) :
         QMessageBox msg;
         msg.setText("Es wurde noch keine Passwortdatei erstellt.");
         msg.setWindowTitle("Keine Datei vorhanden.");
-        //msg.setStandardButtons(QMessageBox::Abort);
         msg.addButton("Benutzername und Passwort setzen",QMessageBox::AcceptRole);
         int ret = msg.exec();
         switch(ret) {
-        //case QMessageBox::Abort : return 0;
         case QMessageBox::AcceptRole :
         {
             cuedussmann::on_actionUID_PWD_ndern_triggered();
@@ -78,11 +90,9 @@ cuedussmann::cuedussmann(QWidget *parent) :
             QMessageBox msg;
             msg.setText("Die Passwörter sind ");
             msg.setWindowTitle("Keine Datei vorhanden.");
-            //msg.setStandardButtons(QMessageBox::Abort);
             msg.addButton("Benutzername und Passwort setzen",QMessageBox::AcceptRole);
             int ret = msg.exec();
             switch(ret) {
-            //case QMessageBox::Abort : return 0;
             case QMessageBox::AcceptRole :
             {
                 cuedussmann::on_actionUID_PWD_ndern_triggered();
@@ -94,13 +104,15 @@ cuedussmann::cuedussmann(QWidget *parent) :
     }
 }
 
- void cuedussmann::on_actionUID_PWD_ndern_triggered()
+void cuedussmann::on_actionUID_PWD_ndern_triggered()
 {
     PwduiDialog *dialog= new PwduiDialog(this,QString::fromAscii(uid).toInt(), QString::fromAscii(pwd).toInt());
     if( dialog->exec())
     {
         strcpy(uid,qPrintable(dialog->lineEdit->text().simplified()));
+        uid[4]='\0';
         strcpy(pwd,qPrintable(dialog->lineEdit_2->text().simplified()));
+        pwd[4]='\0';
         FILE* pwdfile;
         pwdfile=fopen("pwfile","w");
         fputs(strcat(uid,"\n"),pwdfile);
@@ -108,117 +120,114 @@ cuedussmann::cuedussmann(QWidget *parent) :
         fclose(pwdfile);
     }
     delete dialog;
+    //initialize(); //does not work, because some arrays are now initialized twice therefore they must be destroyed before
 }
 
- int cuedussmann::kalwochen()
+int cuedussmann::kalwochen()
 {
-        FILE* wochenliste;
-        core::find("kalendera","<select name=\"sel_datum\" class=\"no_print\" onchange=\"document.form_sel_datum.submit()\">",12);
-        core::find("findoutput","KW");
-        core::find("findoutput","selected=\"selected\"",12);
-        wochenliste=fopen("findoutput","r");
-        char c;
-        while((c=fgetc(wochenliste)) != EOF)
+    FILE* wochenliste;
+    core::find("kalendera","<select name=\"sel_datum\" class=\"no_print\" onchange=\"document.form_sel_datum.submit()\">",12);
+    core::find("findoutput","KW");
+    core::find("findoutput","selected=\"selected\"",12);
+    wochenliste=fopen("findoutput","r");
+    char c;
+    while((c=fgetc(wochenliste)) != EOF)
+    {
+        if(c == '\n') anzwoche++;
+    }
+    fclose(wochenliste);
+    char* puffer=(char*)malloc(150);
+    frstln(puffer,150,"findoutput");
+    cut2(puffer,":",2,2);
+    cut2(puffer," ",1,1);
+    for(int i=48; i<=53; i++)
+    {
+        if(puffer[0]==i)
         {
-                if(c == '\n') anzwoche++;
+            startwoche=10*(i-48);
+            break;
         }
-        fclose(wochenliste);
-        char* puffer=(char*)malloc(150);
-        frstln(puffer,150,"findoutput");
-        cut2(puffer,":",2,2);
-        cut2(puffer," ",1,1);
-        for(int i=48; i<=53; i++)
+    }
+    for(int i=48;i<=57; i++)
+    {
+        if(puffer[1]==i)
         {
-                if(puffer[0]==i)
-                {
-                        startwoche=10*(i-48);
-                        break;
-                }
+            startwoche+=(i-48);
+            break;
         }
-        for(int i=48;i<=57; i++)
-        {
-                if(puffer[1]==i)
-                {
-                        startwoche+=(i-48);
-                        break;
-                }
-        }
-        //printf("startwoche: %i und anzahlwochen: %i\n",startwoche,anzwoche);
-        free(puffer);
-        return 1;
+    }
+    free(puffer);
+    return 1;
 }
 
- void cuedussmann::getsel_datums()
+void cuedussmann::getsel_datums()
 {
-        FILE* wochenliste;
-        char* buffer;
-        buffer=(char*)malloc(150*sizeof(char));
-        slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
-        for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11);
-        wochenliste=fopen("findoutput","r");
-        for(int i=0;i<anzwoche;i++)
-        {
-                fgets(buffer, 150, wochenliste);
-                strcpy(slynmbwochen[i],cut2(buffer,"\"",2,2)); //get silly numbers
-        }
-        fclose(wochenliste);
+    FILE* wochenliste;
+    char* buffer;
+    buffer=(char*)malloc(150*sizeof(char));
+    slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
+    for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11);
+    wochenliste=fopen("findoutput","r");
+    for(int i=0;i<anzwoche;i++)
+    {
+        fgets(buffer, 150, wochenliste);
+        strcpy(slynmbwochen[i],cut2(buffer,"\"",2,2)); //get silly numbers
+    }
+    fclose(wochenliste);
 }
 
- void cuedussmann::setcombobox(int startweek, int endweek)
+void cuedussmann::setcombobox(int startweek, int endweek)
 {
     for(int i=startweek; i<=endweek; i++)
     {
-        //printf("%i",i);
         comboBox->addItem(QString("Woche ")+QString::number(i)); //Therefore index 0 is standig for startweek, its slynumber can be access then by slynumber[0]
     }
 }
 
- void cuedussmann::createmenufiles()
+void cuedussmann::createmenufiles()
 {
-        FILE* menus[anzwoche];
-        char postfield[25];
-        char menufilename[8];
-        char menunumber[2];
-        for(int i=0;i<anzwoche;i++)
-        {
-                strcpy(menufilename,"menu");
-                menunumber[0]=48+i; menunumber[1]='\0';
-                strcat(menufilename,menunumber); strcat(menufilename,"\0");
-                menus[i]=fopen(menufilename, "w");
-                strcpy(postfield,"sel_datum=");
-                strcat(postfield,slynmbwochen[i]);
-                CURLcode ret;
-                CURL *hnd = curl_easy_init();
-                curl_easy_setopt(hnd, CURLOPT_WRITEDATA, menus[i]);
-                curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
-                curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=1;3");
-                curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
-                curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
-                curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
-                curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
-                curl_easy_setopt(hnd, CURLOPT_COOKIEFILE, "Cookiedatei");
-                curl_easy_setopt(hnd, CURLOPT_COOKIEJAR, NULL);
-                ret = curl_easy_perform(hnd);
-                curl_easy_cleanup(hnd);
-                fclose(menus[i]);
-        }
+    FILE* menus[anzwoche];
+    char postfield[25];
+    char menufilename[8];
+    char menunumber[2];
+    for(int i=0;i<anzwoche;i++)
+    {
+        strcpy(menufilename,"menu");
+        menunumber[0]=48+i; menunumber[1]='\0';
+        strcat(menufilename,menunumber); strcat(menufilename,"\0");
+        menus[i]=fopen(menufilename, "w");
+        strcpy(postfield,"sel_datum=");
+        strcat(postfield,slynmbwochen[i]);
+        CURLcode ret;
+        CURL *hnd = curl_easy_init();
+        curl_easy_setopt(hnd, CURLOPT_WRITEDATA, menus[i]);
+        curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
+        curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=1;3");
+        curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
+        curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
+        curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
+        curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
+        curl_easy_setopt(hnd, CURLOPT_COOKIEFILE, "Cookiedatei");
+        curl_easy_setopt(hnd, CURLOPT_COOKIEJAR, NULL);
+        ret = curl_easy_perform(hnd);
+        curl_easy_cleanup(hnd);
+        fclose(menus[i]);
+    }
 }
 
- void cuedussmann::parsemenufile(int itemindex)
+void cuedussmann::parsemenufile(int itemindex)
 {
-     QBrush backcolor;
-     for(int i =0; i<7;i++)
-     {
-         for(int j=0;j<3;j++)
-         {
-             tableWidget->item(j,i)->setText("");
-             tableWidget->item(j,i)->setBackground(backcolor);
-         }
-     }
+    QBrush backcolor;
+    for(int i =0; i<7;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            tableWidget->item(j,i)->setText("");
+            tableWidget->item(j,i)->setBackground(backcolor);
+        }
+    }
     QString menuname("menu");
     menuname.append(QString::number(itemindex));
-    //printf("%s",qPrintable(menuname));
-    //printf("%s",qPrintable(menuname));
     core::find(qPrintable(menuname),"<table class=\"splanauflistung\"  summary=\"Speiseplan\">",10);
     core::find("findoutput","</th>");
     int numdays=0;
@@ -227,7 +236,7 @@ cuedussmann::cuedussmann(QWidget *parent) :
     days = fopen("findoutput","r");
     while((c=fgetc(days))!= EOF )
     {
-            if(c=='\n') numdays++;
+        if(c=='\n') numdays++;
     }
     fclose(days);
     numdays--; //wegen &nbsp;
@@ -236,47 +245,323 @@ cuedussmann::cuedussmann(QWidget *parent) :
     auflistungen=fopen("findoutput","r");
     char* tmp=(char*)malloc(300);
     char* tmp2=(char*)malloc(300);
-    //backcolor.setStyle(Qt::Dense4Pattern);
     for(int j=0;j<numdays*3;j++) //21, weil bis dahin es zum sonntag menü 3 geht //fetter bug, was, wenn speiseplan nur bis freitag geht???!!!
     {
-            fgets(tmp, 300,auflistungen);
-            strcpy(tmp2,tmp);
-            cut2(tmp,">",2,7);
-            strcpy(tmp,qPrintable(QString::fromAscii(tmp).remove(QRegExp("[0123456,789]")).simplified()));
-            removeformattingsigns(tmp);
-            tableWidget->item(j/numdays, j%numdays)->setText(QString::fromAscii(tmp));
+        fgets(tmp, 300,auflistungen);
+        strcpy(tmp2,tmp);
+        cut2(tmp,">",2,7);
+        strcpy(tmp,qPrintable(QString::fromAscii(tmp).remove(QRegExp("[0123456,789]")).simplified()));
+        removeformattingsigns(tmp);
+        tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
+        if(qstrlen(tmp)>3)
+        {
+            tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
             backcolor.setColor(QColor(255,0,0));
             backcolor.setStyle(Qt::SolidPattern);
-            tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
+            tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor); //parsing the checkboxes must be included. setting some checkboxes disabled if this day can't be changed
+
             if(strstr(tmp2,"pointer")!=NULL)
             {
-                cut2(tmp,">",2,7);
-                strcpy(tmp,qPrintable(QString::fromAscii(tmp).remove(QRegExp("[0123456,789]")).simplified()));
-                removeformattingsigns(tmp);
-                tableWidget->item(j/numdays, j%numdays)->setText(QString::fromAscii(tmp)); //--> Ausschließen des Tages, da dieser schon bestellt ==> alle folgenden unbestellt oder gruen
+                tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                 backcolor.setColor(QColor(255,0,0));
                 backcolor.setStyle(Qt::Dense4Pattern);
                 tableWidget->item(j/numdays,j%numdays)->setBackground(backcolor);
                 if(strstr(tmp2,"gruen")!=NULL)
                 {
-                    cut2(tmp,">",2,7);
-                    strcpy(tmp,qPrintable(QString::fromAscii(tmp).remove(QRegExp("[0123456,789]")).simplified()));
-                    removeformattingsigns(tmp);
-                    tableWidget->item(j/numdays, j%numdays)->setText(QString::fromAscii(tmp));
+                    tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                     backcolor.setColor(QColor(0,255,0));
                     backcolor.setStyle(Qt::Dense4Pattern);
                     tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
                 }
             }else if(strstr(tmp2,"gruen")!=NULL)
             {
-                cut2(tmp,">",2,7);
-                strcpy(tmp,qPrintable(QString::fromAscii(tmp).remove(QRegExp("[0123456,789]")).simplified()));
-                removeformattingsigns(tmp);
-                tableWidget->item(j/numdays, j%numdays)->setText(QString::fromAscii(tmp));
+                tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                 backcolor.setColor(QColor(0,255,0));
                 backcolor.setStyle(Qt::SolidPattern);
                 tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
             }
+        }
+        else
+        {
+            tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::NoItemFlags);
+        }
     }
     fclose(auflistungen);
+    checkBox->setChecked(setdates[itemindex][0]);
+    checkBox_2->setChecked(setdates[itemindex][1]);
+    checkBox_3->setChecked(setdates[itemindex][2]);
+    checkBox_4->setChecked(setdates[itemindex][3]);
+    checkBox_5->setChecked(setdates[itemindex][4]);
+    checkBox_6->setChecked(setdates[itemindex][5]);
+    checkBox_7->setChecked(setdates[itemindex][6]);
+    checkBox_8->setChecked(false);
+}
+
+void cuedussmann::on_checkBox_8_clicked()
+{
+    if(!checkBox->isChecked())
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,0)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,0)->background().color().green()>0) || (tableWidget->item(i,0)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox->setChecked(true);
+            setdates[comboBox->currentIndex()][0]=1;
+        }
+    }
+
+    if(!checkBox_2->isChecked())
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,1)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,1)->background().color().green()>0) || (tableWidget->item(i,1)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_2->setChecked(true);
+            setdates[comboBox->currentIndex()][1]=1;
+        }
+    }
+
+    if(!checkBox_3->isChecked())
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,2)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,2)->background().color().green()>0) || (tableWidget->item(i,2)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_3->setChecked(true);
+            setdates[comboBox->currentIndex()][2]=1;
+        }
+    }
+
+    if(!checkBox_4->isChecked())
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,3)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_4->setChecked(true);
+            setdates[comboBox->currentIndex()][3]=1;
+        }
+    }
+
+    if(!checkBox_5->isChecked())
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,4)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,4)->background().color().green()>0) || (tableWidget->item(i,4)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_5->setChecked(true);
+            setdates[comboBox->currentIndex()][4]=1;
+        }
+    }
+
+    if(!checkBox_6->isChecked())
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,5)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,5)->background().color().green()>0) || (tableWidget->item(i,5)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_6->setChecked(true);
+            setdates[comboBox->currentIndex()][5]=1;
+        }
+    }
+
+    if(!checkBox_7->isChecked())
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,6)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,6)->background().color().green()>0) || (tableWidget->item(i,6)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_7->setChecked(true);
+            setdates[comboBox->currentIndex()][6]=1;
+        }
+    }
+}
+
+void cuedussmann::on_checkBox_clicked()
+{
+    if(!(checkBox->isChecked()))
+    {
+        setdates[comboBox->currentIndex()][0]=0;
+        checkBox_8->setChecked(false);
+    }
+    else
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,0)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,0)->background().color().green()>0) || (tableWidget->item(i,0)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox->setChecked(true);
+            setdates[comboBox->currentIndex()][0]=1;
+        } else checkBox->setChecked(false);
+    }
+}
+
+void cuedussmann::on_checkBox_2_clicked()
+{
+    if(!(checkBox_2->isChecked()))
+    {
+        setdates[comboBox->currentIndex()][1]=0;
+        checkBox_8->setChecked(false);
+    }
+    else
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,1)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,1)->background().color().green()>0) || (tableWidget->item(i,1)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_2->setChecked(true);
+            setdates[comboBox->currentIndex()][1]=1;
+        }else checkBox_2->setChecked(false);
+    }
+}
+
+void cuedussmann::on_checkBox_3_clicked()
+{
+    if(!(checkBox_3->isChecked()))
+    {
+        setdates[comboBox->currentIndex()][2]=0;
+        checkBox_8->setChecked(false);
+    }
+    else
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,2)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,2)->background().color().green()>0) || (tableWidget->item(i,2)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_3->setChecked(true);
+            setdates[comboBox->currentIndex()][2]=1;
+        }else checkBox_3->setChecked(false);
+    }
+}
+
+void cuedussmann::on_checkBox_4_clicked()
+{
+    if(!(checkBox_4->isChecked()))
+    {
+        setdates[comboBox->currentIndex()][3]=0;
+        checkBox_8->setChecked(false);
+    }
+    else
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,3)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_4->setChecked(true);
+            setdates[comboBox->currentIndex()][3]=1;
+        }else checkBox_4->setChecked(false);
+    }
+}
+
+void cuedussmann::on_checkBox_5_clicked()
+{
+    if(!(checkBox_5->isChecked()))
+    {
+        setdates[comboBox->currentIndex()][4]=0;
+        checkBox_8->setChecked(false);
+    }
+    else
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,4)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,4)->background().color().green()>0) || (tableWidget->item(i,4)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_5->setChecked(true);
+            setdates[comboBox->currentIndex()][4]=1;
+        }else checkBox_5->setChecked(false);
+    }
+}
+
+void cuedussmann::on_checkBox_6_clicked()
+{
+    if(!(checkBox_6->isChecked()))
+    {
+        setdates[comboBox->currentIndex()][5]=0;
+        checkBox_8->setChecked(false);
+    }
+    else
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,5)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,5)->background().color().green()>0) || (tableWidget->item(i,5)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_6->setChecked(true);
+            setdates[comboBox->currentIndex()][5]=1;
+        }else checkBox_6->setChecked(false);
+    }
+}
+
+void cuedussmann::on_checkBox_7_clicked()
+{
+    if(!(checkBox_7->isChecked()))
+    {
+        setdates[comboBox->currentIndex()][6]=0;
+        checkBox_8->setChecked(false);
+    }
+    else
+    {
+        int needed=1;
+        for(int i=0;i<3;i++)
+        {
+            if(tableWidget->item(i,6)->background().style()==Qt::SolidPattern) needed--;
+            if((tableWidget->item(i,6)->background().color().green()>0) || (tableWidget->item(i,6)->background().color().red()<255)) needed--;
+        }
+        if(needed>=0)
+        {
+            checkBox_7->setChecked(true);
+            setdates[comboBox->currentIndex()][6]=1;
+        }else checkBox_7->setChecked(false);
+    }
 }
