@@ -4,7 +4,6 @@
 #include <QString>
 #include <QMessageBox>
 using namespace core;
-
 cuedussmann::cuedussmann(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -28,7 +27,7 @@ cuedussmann::cuedussmann(QWidget *parent) :
 void cuedussmann::initialize()
 {
     loadPWDUID();
-    /*while(loginandcookie(uid, pwd)==0)
+    while(loginandcookie(uid, pwd)==0)
     {
         QMessageBox msg;
         msg.setText("Falsche Nutzernummer/Passwort Kombination");
@@ -39,24 +38,32 @@ void cuedussmann::initialize()
         {
             cuedussmann::on_actionUID_PWD_ndern_triggered();
         }
-    }*/
+    }
     kalwochen();
     getsel_datums();
-    /*createmenufiles();*/
+    createmenufiles();
+    ratings=(float***)calloc(anzwoche,sizeof(float**)); //--> stores ratings for foods
     setdates=(int**)calloc(anzwoche,sizeof(int*));
     wirkbestellen=(int**)calloc(anzwoche,sizeof(int*));
     for(int i = 0; i<anzwoche; i++)
     {
+        ratings[i]=(float**)calloc(7,sizeof(float*));
         setdates[i]=(int*)calloc(7,sizeof(int));
         wirkbestellen[i]=(int*)calloc(7,sizeof(int));
         for(int j = 0; j<7; j++)
         {
+            ratings[i][j]=(float*)calloc(3,sizeof(float));
             setdates[i][j]=0;
             wirkbestellen[i][j]=0;
+            for(int k =0;k <3;k++)
+            {
+               // ratings[i][j][k]=(float)malloc(sizeof(float));
+                ratings[i][j][k]=0.0;
+            }
         }
     }
     setcombobox(startwoche, startwoche+anzwoche-1);
-    parsemenufile(0); //TODO: check or uncheck checkboxes depending on the chosen week
+    parsemenufile(0);
 }
 
 int cuedussmann::loadPWDUID()
@@ -252,7 +259,7 @@ void cuedussmann::parsemenufile(int itemindex)
         cut2(tmp,">",2,7);
         strcpy(tmp,qPrintable(QString::fromAscii(tmp).remove(QRegExp("[0123456,789]")).simplified()));
         removeformattingsigns(tmp);
-        tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
+        tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
         if(qstrlen(tmp)>3)
         {
             tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
@@ -265,12 +272,14 @@ void cuedussmann::parsemenufile(int itemindex)
                 tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                 backcolor.setColor(QColor(255,0,0));
                 backcolor.setStyle(Qt::Dense4Pattern);
+                tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
                 tableWidget->item(j/numdays,j%numdays)->setBackground(backcolor);
                 if(strstr(tmp2,"gruen")!=NULL)
                 {
                     tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                     backcolor.setColor(QColor(0,255,0));
                     backcolor.setStyle(Qt::Dense4Pattern);
+                    tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
                     tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
                 }
             }else if(strstr(tmp2,"gruen")!=NULL)
@@ -563,5 +572,41 @@ void cuedussmann::on_checkBox_7_clicked()
             checkBox_7->setChecked(true);
             setdates[comboBox->currentIndex()][6]=1;
         }else checkBox_7->setChecked(false);
+    }
+}
+
+void cuedussmann::on_tableWidget_cellDoubleClicked(int row, int column)
+{
+    if(tableWidget->item(row,column)->flags()==Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable)
+    {
+        QBrush background;
+        background.setColor(QColor(255,0,0));
+        background.setStyle(Qt::Dense4Pattern);
+        for(int i=0;i<3;i++)
+        {
+            if((tableWidget->item(i,column)->background().color().red()>0) || (tableWidget->item(i,column)->background().color().green()>0)) tableWidget->item(i,column)->setBackground(background);
+        }
+        setdates[comboBox->currentIndex()][column]=1;
+        wirkbestellen[comboBox->currentIndex()][column]=1;
+        background.setColor(QColor(0,255,0));
+        tableWidget->item(row,column)->setBackground(background);
+        ratings[comboBox->currentIndex()][column][row]=11.0; //this will later on mean that the menu's components are not added to rating file and this menu will be definitely ordered.
+        switch(column)//das bereits grün für diesen tag muss null gesetzt werden - hidden auch ???? //Ebenso die ratings global so wie die ganzen anderen arrays deklarieren
+        {
+        case 0:
+            checkBox->setChecked(true);break;
+        case 1:
+            checkBox_2->setChecked(true);break;
+        case 2:
+            checkBox_3->setChecked(true);break;
+        case 3:
+            checkBox_4->setChecked(true);break;
+        case 4:
+            checkBox_5->setChecked(true);break;
+        case 5:
+            checkBox_6->setChecked(true);break;
+        case 6:
+            checkBox_7->setChecked(true);break;
+        }
     }
 }

@@ -31,6 +31,8 @@ private slots:
 
     void on_checkBox_7_clicked();
 
+    void on_tableWidget_cellDoubleClicked(int row, int column);
+
 private:
     void initialize();
     int loadPWDUID();

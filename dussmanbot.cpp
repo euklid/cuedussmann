@@ -69,6 +69,7 @@ char*** bergruen; //speichert nur die grünen menüs, nicht die grünen dessert!
 char*** bergruend; //der speichert die Desserts :-)
 int ** wirkbestellen; //Für welche Tage wirklich bestellt werden soll
 char*** bestelldaten; //Daten, die nicht hidden sind, also die Bestelldaten
+float*** ratings; //--> stores ratings for foods
 
 char uid[6]="", pwd[6]="";
 
@@ -84,6 +85,7 @@ char uid[6]="", pwd[6]="";
 	//tagesauswahl();
 	//getsel_datums();
 	//createmenufiles(uid,pwd);
+        //float ratings[anzwoche][7][3]; //--> stores ratings for foods
 	//gethiddenandbestellt();
 	//getdatensatz();
 	//getratingandbestelldaten();
@@ -855,7 +857,6 @@ void getdatensatz()
 void getratingandbestelldaten()
 {
 	FILE* ratinglist;
-	float ratings[anzwoche][7][3]; //--> stores ratings for foods
         char** hackstring;
 	for(int i=0; i<anzwoche;i++)
 	{
