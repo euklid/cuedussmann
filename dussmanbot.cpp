@@ -1061,10 +1061,7 @@ void getratingandbestelldaten()
 	}
 }
 
-
-
-void sendbestellung()//hier muss sowohl das Senden der daten für die Woche, als auch das senden der bestätigung!!!,
-						//praktisch die letzte Funktion auf dem Schlachtfeld
+void sendbestellung()//hier muss sowohl das Senden der daten für die Woche, als auch das senden der bestätigung!!!, //praktisch die letzte Funktion auf dem Schlachtfeld
 {
 	int bestellsumme=0; //summiert einfach die wirkbestellen, sodass man weiß, ob diese woche überhaupt bestellt werden soll
 	char* postfield;

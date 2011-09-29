@@ -4,6 +4,7 @@
 #include <QString>
 #include <QMessageBox>
 using namespace core;
+int*** changedmenu;
 cuedussmann::cuedussmann(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -45,20 +46,24 @@ void cuedussmann::initialize()
     ratings=(float***)calloc(anzwoche,sizeof(float**)); //--> stores ratings for foods
     setdates=(int**)calloc(anzwoche,sizeof(int*));
     wirkbestellen=(int**)calloc(anzwoche,sizeof(int*));
+    changedmenu=(int***)calloc(anzwoche,sizeof(int**));
     for(int i = 0; i<anzwoche; i++)
     {
         ratings[i]=(float**)calloc(7,sizeof(float*));
         setdates[i]=(int*)calloc(7,sizeof(int));
         wirkbestellen[i]=(int*)calloc(7,sizeof(int));
+        changedmenu[i]=(int**)calloc(7,sizeof(int*));
         for(int j = 0; j<7; j++)
         {
             ratings[i][j]=(float*)calloc(3,sizeof(float));
+            changedmenu[i][j]=(int*)calloc(3,sizeof(int));
             setdates[i][j]=0;
             wirkbestellen[i][j]=0;
             for(int k =0;k <3;k++)
             {
                // ratings[i][j][k]=(float)malloc(sizeof(float));
                 ratings[i][j][k]=0.0;
+                changedmenu[i][j][k]=0;
             }
         }
     }
@@ -274,7 +279,7 @@ void cuedussmann::parsemenufile(int itemindex)
                 backcolor.setStyle(Qt::Dense4Pattern);
                 tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
                 tableWidget->item(j/numdays,j%numdays)->setBackground(backcolor);
-                if(strstr(tmp2,"gruen")!=NULL)
+                if(strstr(tmp2,"gruen")!=NULL || changedmenu[itemindex][j%numdays][j/numdays]==1)
                 {
                     tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                     backcolor.setColor(QColor(0,255,0));
@@ -313,10 +318,10 @@ void cuedussmann::on_checkBox_8_clicked()
         int needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,0)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,0)->background().color().green()>0) || (tableWidget->item(i,0)->background().color().red()<255)) needed--;
+            if((tableWidget->item(i,0)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,0)->flags()!=Qt::NoItemFlags)) needed--;
+            if((tableWidget->item(i,0)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,0)->background().color().green()>0) || (tableWidget->item(i,0)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox->setChecked(true);
             setdates[comboBox->currentIndex()][0]=1;
@@ -328,10 +333,10 @@ void cuedussmann::on_checkBox_8_clicked()
         int needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,1)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,1)->background().color().green()>0) || (tableWidget->item(i,1)->background().color().red()<255)) needed--;
+            if((tableWidget->item(i,1)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,1)->flags()!=Qt::NoItemFlags)) needed--;
+            if((tableWidget->item(i,1)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,1)->background().color().green()>0) || (tableWidget->item(i,1)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_2->setChecked(true);
             setdates[comboBox->currentIndex()][1]=1;
@@ -343,10 +348,10 @@ void cuedussmann::on_checkBox_8_clicked()
         int needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,2)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,2)->background().color().green()>0) || (tableWidget->item(i,2)->background().color().red()<255)) needed--;
+            if((tableWidget->item(i,2)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,2)->flags()!=Qt::NoItemFlags)) needed--;
+            if((tableWidget->item(i,2)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,2)->background().color().green()>0) || (tableWidget->item(i,2)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_3->setChecked(true);
             setdates[comboBox->currentIndex()][2]=1;
@@ -358,10 +363,10 @@ void cuedussmann::on_checkBox_8_clicked()
         int needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,3)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255)) needed--;
+            if((tableWidget->item(i,3)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)) needed--;
+            if((tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_4->setChecked(true);
             setdates[comboBox->currentIndex()][3]=1;
@@ -373,10 +378,10 @@ void cuedussmann::on_checkBox_8_clicked()
         int needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,4)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,4)->background().color().green()>0) || (tableWidget->item(i,4)->background().color().red()<255)) needed--;
+            if((tableWidget->item(i,4)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)) needed--;
+            if((tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,4)->background().color().green()>0) || (tableWidget->item(i,4)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_5->setChecked(true);
             setdates[comboBox->currentIndex()][4]=1;
@@ -388,10 +393,10 @@ void cuedussmann::on_checkBox_8_clicked()
         int needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,5)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,5)->background().color().green()>0) || (tableWidget->item(i,5)->background().color().red()<255)) needed--;
+            if((tableWidget->item(i,5)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,5)->flags()!=Qt::NoItemFlags)) needed--;
+            if((tableWidget->item(i,5)->flags()!=Qt::NoItemFlags)&& ((tableWidget->item(i,5)->background().color().green()>0) || (tableWidget->item(i,5)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_6->setChecked(true);
             setdates[comboBox->currentIndex()][5]=1;
@@ -403,10 +408,10 @@ void cuedussmann::on_checkBox_8_clicked()
         int needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,6)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,6)->background().color().green()>0) || (tableWidget->item(i,6)->background().color().red()<255)) needed--;
+            if((tableWidget->item(i,6)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,6)->flags()!=Qt::NoItemFlags)) needed--;
+            if((tableWidget->item(i,6)->flags()!=Qt::NoItemFlags) && ((tableWidget->item(i,6)->background().color().green()>0) || (tableWidget->item(i,6)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_7->setChecked(true);
             setdates[comboBox->currentIndex()][6]=1;
@@ -584,14 +589,20 @@ void cuedussmann::on_tableWidget_cellDoubleClicked(int row, int column)
         background.setStyle(Qt::Dense4Pattern);
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,column)->background().color().red()>0) || (tableWidget->item(i,column)->background().color().green()>0)) tableWidget->item(i,column)->setBackground(background);
+            if((tableWidget->item(i,column)->background().color().red()>0) || (tableWidget->item(i,column)->background().color().green()>0))
+            {
+                tableWidget->item(i,column)->setBackground(background);
+                ratings[comboBox->currentIndex()][column][i]=-1; //-1 should mean, that the day has been chosen manually and this menu must not be ordered
+            }
+            changedmenu[comboBox->currentIndex()][column][i]=0;
         }
         setdates[comboBox->currentIndex()][column]=1;
         wirkbestellen[comboBox->currentIndex()][column]=1;
+        changedmenu[comboBox->currentIndex()][column][row]=1;
         background.setColor(QColor(0,255,0));
         tableWidget->item(row,column)->setBackground(background);
         ratings[comboBox->currentIndex()][column][row]=11.0; //this will later on mean that the menu's components are not added to rating file and this menu will be definitely ordered.
-        switch(column)//das bereits grün für diesen tag muss null gesetzt werden - hidden auch ???? //Ebenso die ratings global so wie die ganzen anderen arrays deklarieren
+        switch(column) //an array is needed to store manually changed data. this data would be appended at the end of the postfield so that the previous selection of the menu for one day is internally overwritten. The server always takes the last value of a variable.
         {
         case 0:
             checkBox->setChecked(true);break;
