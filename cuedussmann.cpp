@@ -27,7 +27,7 @@ cuedussmann::cuedussmann(QWidget *parent) :
 
 void cuedussmann::initialize()
 {
-    loadPWDUID();
+    /*loadPWDUID();
     while(loginandcookie(uid, pwd)==0)
     {
         QMessageBox msg;
@@ -39,10 +39,11 @@ void cuedussmann::initialize()
         {
             cuedussmann::on_actionUID_PWD_ndern_triggered();
         }
-    }
+    }*/
     kalwochen();
+    slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
     getsel_datums();
-    createmenufiles();
+    //createmenufiles();
     ratings=(float***)calloc(anzwoche,sizeof(float**)); //--> stores ratings for foods
     setdates=(int**)calloc(anzwoche,sizeof(int*));
     wirkbestellen=(int**)calloc(anzwoche,sizeof(int*));
@@ -177,7 +178,6 @@ void cuedussmann::getsel_datums()
     FILE* wochenliste;
     char* buffer;
     buffer=(char*)malloc(150*sizeof(char));
-    slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
     for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11);
     wochenliste=fopen("findoutput","r");
     for(int i=0;i<anzwoche;i++)
@@ -274,22 +274,35 @@ void cuedussmann::parsemenufile(int itemindex)
 
             if(strstr(tmp2,"pointer")!=NULL)
             {
-                tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
+                //tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                 backcolor.setColor(QColor(255,0,0));
                 backcolor.setStyle(Qt::Dense4Pattern);
                 tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
                 tableWidget->item(j/numdays,j%numdays)->setBackground(backcolor);
-                if(strstr(tmp2,"gruen")!=NULL || changedmenu[itemindex][j%numdays][j/numdays]==1)
+                int manually=0;
+                for(int k=0;k<3;k++)manually+=(changedmenu[itemindex][j%numdays][k]*(k+1));
+                if(strstr(tmp2,"gruen")!=NULL || manually>0)
                 {
-                    tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                     backcolor.setColor(QColor(0,255,0));
                     backcolor.setStyle(Qt::Dense4Pattern);
+                    if(manually==0)
+                    {
                     tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
                     tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
+                    } else
+                    {
+                        printf("%i\n",manually);
+                        switch(manually)
+                        {
+                        case 1: tableWidget->item(0, j%numdays)->setBackground(backcolor); break;
+                        case 2: tableWidget->item(1, j%numdays)->setBackground(backcolor);break;
+                        case 3: tableWidget->item(2, j%numdays)->setBackground(backcolor);break;
+                        }
+                    }
                 }
             }else if(strstr(tmp2,"gruen")!=NULL)
             {
-                tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
+                //tableWidget->item(j/numdays, j%numdays)->setText(QString::fromLocal8Bit(tmp));
                 backcolor.setColor(QColor(0,255,0));
                 backcolor.setStyle(Qt::SolidPattern);
                 tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
