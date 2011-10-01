@@ -8,8 +8,9 @@ int*** changedmenu;
 cuedussmann::cuedussmann(QWidget *parent) :
     QMainWindow(parent)
 {
+    initialized=0;
     setupUi(this);
-    initialize();
+    initialized=initialize();
     connect(comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(parsemenufile(int))); //combobox must be connected with the checkboxes, to set them checked or not, the checkboxes must be connected with the cell clicked functions...
     //TODO:
     /* now the menufiles should be downloaded (OK) and BE PARSED (OK), so that the actual week is shown in the table(OK). The combobox must
@@ -25,9 +26,9 @@ cuedussmann::cuedussmann(QWidget *parent) :
      */
 }
 
-void cuedussmann::initialize()
-{
-    /*loadPWDUID();
+int cuedussmann::initialize()
+{    
+    loadPWDUID();
     while(loginandcookie(uid, pwd)==0)
     {
         QMessageBox msg;
@@ -39,11 +40,13 @@ void cuedussmann::initialize()
         {
             cuedussmann::on_actionUID_PWD_ndern_triggered();
         }
-    }*/
+    }
+    if(initialized==0)
+    {
     kalwochen();
     slynmbwochen=(char**)calloc(anzwoche,sizeof(char*));
     getsel_datums();
-    //createmenufiles();
+    createmenufiles();
     ratings=(float***)calloc(anzwoche,sizeof(float**)); //--> stores ratings for foods
     setdates=(int**)calloc(anzwoche,sizeof(int*));
     wirkbestellen=(int**)calloc(anzwoche,sizeof(int*));
@@ -62,7 +65,7 @@ void cuedussmann::initialize()
             wirkbestellen[i][j]=0;
             for(int k =0;k <3;k++)
             {
-               // ratings[i][j][k]=(float)malloc(sizeof(float));
+                // ratings[i][j][k]=(float)malloc(sizeof(float));
                 ratings[i][j][k]=0.0;
                 changedmenu[i][j][k]=0;
             }
@@ -70,6 +73,8 @@ void cuedussmann::initialize()
     }
     setcombobox(startwoche, startwoche+anzwoche-1);
     parsemenufile(0);
+    return 1;
+    }
 }
 
 int cuedussmann::loadPWDUID()
@@ -131,9 +136,19 @@ void cuedussmann::on_actionUID_PWD_ndern_triggered()
         fputs(strcat(uid,"\n"),pwdfile);
         fputs(strcat(pwd,"\n"),pwdfile);
         fclose(pwdfile);
+        if(initialized==1)
+        {
+            anzwoche=0;startwoche=0;
+            free(wirkbestellen);
+            free(setdates);
+            free(slynmbwochen);
+            free(changedmenu);
+            free(ratings);
+            initialized=0;
+        }
+        initialized=initialize();
     }
     delete dialog;
-    //initialize(); //does not work, because some arrays are now initialized twice therefore they must be destroyed before
 }
 
 int cuedussmann::kalwochen()
@@ -178,7 +193,7 @@ void cuedussmann::getsel_datums()
     FILE* wochenliste;
     char* buffer;
     buffer=(char*)malloc(150*sizeof(char));
-    for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11);
+    for(int i=0;i<anzwoche;i++) slynmbwochen[i]=(char*)malloc(11*sizeof(char));
     wochenliste=fopen("findoutput","r");
     for(int i=0;i<anzwoche;i++)
     {
@@ -186,13 +201,16 @@ void cuedussmann::getsel_datums()
         strcpy(slynmbwochen[i],cut2(buffer,"\"",2,2)); //get silly numbers
     }
     fclose(wochenliste);
+    free(buffer);
 }
 
 void cuedussmann::setcombobox(int startweek, int endweek)
 {
     for(int i=startweek; i<=endweek; i++)
     {
+        comboBox->removeItem(i-startweek);
         comboBox->addItem(QString("Woche ")+QString::number(i)); //Therefore index 0 is standig for startweek, its slynumber can be access then by slynumber[0]
+        comboBox->setItemText(i-startweek,QString("Woche ")+QString::number(i));
     }
 }
 
@@ -287,11 +305,11 @@ void cuedussmann::parsemenufile(int itemindex)
                     backcolor.setStyle(Qt::Dense4Pattern);
                     if(manually==0)
                     {
-                    tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
-                    tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
+                        tableWidget->item(j/numdays, j%numdays)->setFlags(Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable);
+                        tableWidget->item(j/numdays, j%numdays)->setBackground(backcolor);
                     } else
                     {
-                        printf("%i\n",manually);
+                        //printf("%i\n",manually);
                         switch(manually)
                         {
                         case 1: tableWidget->item(0, j%numdays)->setBackground(backcolor); break;
@@ -377,7 +395,7 @@ void cuedussmann::on_checkBox_8_clicked()
         for(int i=0;i<3;i++)
         {
             if((tableWidget->item(i,3)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)) needed--;
-            if((tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255))) needed--;
+            if((tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255))) needed--;
         }
         if(needed>0)
         {

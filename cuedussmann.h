@@ -34,7 +34,8 @@ private slots:
     void on_tableWidget_cellDoubleClicked(int row, int column);
 
 private:
-    void initialize();
+    int initialized;
+    int initialize();
     int loadPWDUID();
     int kalwochen();
     void getsel_datums();
