@@ -8,7 +8,7 @@ class cuedussmann : public QMainWindow, public Ui::cuedussmann
     Q_OBJECT
 
 public:
-    explicit cuedussmann(QWidget *parent = 0);;
+    explicit cuedussmann(QWidget *parent = 0);
 
 private slots:
 
@@ -32,6 +32,8 @@ private slots:
     void on_checkBox_7_clicked();
 
     void on_tableWidget_cellDoubleClicked(int row, int column);
+
+    void on_actionEssen_bestellen_lassen_triggered();
 
 private:
     int initialized;

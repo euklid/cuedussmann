@@ -13,10 +13,24 @@ TEMPLATE = app
 SOURCES += main.cpp\
         cuedussmann.cpp \
     dussmanbot.cpp \
-    pwduidialog.cpp
+    pwduidialog.cpp \
+    ratedialog.cpp
 
 HEADERS  += cuedussmann.h \
-    pwduidialog.h
+    pwduidialog.h \
+    ratedialog.h
 
 FORMS    += cuedussmann.ui \
-    pwduidialog.ui
+    pwduidialog.ui \
+    ratedialog.ui
+
+
+
+
+
+
+
+
+
+
+

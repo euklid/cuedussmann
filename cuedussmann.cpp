@@ -29,16 +29,37 @@ cuedussmann::cuedussmann(QWidget *parent) :
 int cuedussmann::initialize()
 {    
     loadPWDUID();
-    while(loginandcookie(uid, pwd)==0)
+    int log;
+    while((log=loginandcookie(uid, pwd))!=1)
     {
-        QMessageBox msg;
-        msg.setText("Falsche Nutzernummer/Passwort Kombination");
-        msg.setWindowTitle("Fehler beim Login");
-        msg.addButton("Benutzername und Passwort neu setzen",QMessageBox::AcceptRole);
-        int ret = msg.exec();
-        if(ret==QMessageBox::AcceptRole)
+        if(log==0)
         {
-            cuedussmann::on_actionUID_PWD_ndern_triggered();
+            QMessageBox msg;
+            msg.setText("Falsche Nutzernummer/Passwort Kombination");
+            msg.setWindowTitle("Fehler beim Login");
+            msg.addButton("Benutzername und Passwort neu setzen",QMessageBox::AcceptRole);
+            int ret = msg.exec();
+            if(ret==QMessageBox::AcceptRole)
+            {
+                cuedussmann::on_actionUID_PWD_ndern_triggered();
+            }
+        }
+        if(log==2)
+        {
+            QMessageBox msg;
+            msg.setText(QString("Der Account für die eingegebene Benutzernummer ist gesperrt. Tut mir sehr leid."));
+            msg.setWindowTitle("Fehler beim Login");
+            msg.setStandardButtons(QMessageBox::Abort);
+            msg.addButton("Anderen Account einstellen",QMessageBox::AcceptRole);
+            int ret = msg.exec();
+            if(ret==QMessageBox::AcceptRole)
+            {
+                cuedussmann::on_actionUID_PWD_ndern_triggered();
+            }
+            if(ret==QMessageBox::RejectRole)
+            {
+                QApplication::exit(0);
+            }
         }
     }
     if(initialized==0)
@@ -73,6 +94,36 @@ int cuedussmann::initialize()
     }
     setcombobox(startwoche, startwoche+anzwoche-1);
     parsemenufile(0);
+    hidden=(char***)calloc(anzwoche,sizeof(char**));
+    bergruen=(char***)calloc(anzwoche, sizeof(char**));
+    bergruend=(char***)calloc(anzwoche,sizeof(char**));
+    for(int i = 0 ; i < anzwoche; i++)
+    {
+        hidden[i]=(char**)calloc(35,sizeof(char*));
+        bergruen[i]=(char**)calloc(35,sizeof(char*));
+        bergruend[i]=(char**)calloc(35,sizeof(char*));
+
+        for(int k=0;k<35;k++)
+        {
+            hidden[i][k]=(char*)malloc(50); strcpy(hidden[i][k],"\0");
+            bergruen[i][k]=(char*)malloc(50);strcpy(bergruen[i][k],"\0");
+            bergruend[i][k]=(char*)malloc(50);strcpy(bergruend[i][k],"\0");
+        }
+    }
+    wocheplustagplusdaten=(char****)calloc(anzwoche,sizeof(char***));
+    for(int i=0;i<anzwoche;i++)
+    {
+            wocheplustagplusdaten[i]=(char***)calloc(7,sizeof(char**));
+            for(int j=0;j<7;j++)
+            {
+                    wocheplustagplusdaten[i][j]=(char**)calloc(9,sizeof(char*));
+                    for(int k=0;k<9;k++)
+                    {
+                            wocheplustagplusdaten[i][j][k]=(char*)malloc(150*sizeof(char));
+                            strcpy(wocheplustagplusdaten[i][j][k],"\0");
+                    }
+            }
+    }
     return 1;
     }
 }
@@ -651,4 +702,10 @@ void cuedussmann::on_tableWidget_cellDoubleClicked(int row, int column)
             checkBox_7->setChecked(true);break;
         }
     }
+}
+
+void cuedussmann::on_actionEssen_bestellen_lassen_triggered() //now big fat routines are following
+{
+    gethiddenandbestellt(); //save data in the hidden, bergruen and bergruend arrays
+
 }

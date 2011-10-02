@@ -1,5 +1,4 @@
 #include "pwduidialog.h"
-
 PwduiDialog::PwduiDialog(QWidget *parent, int u, int p) :
     QDialog(parent)
 {

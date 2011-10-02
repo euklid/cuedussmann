@@ -439,7 +439,9 @@ int loginandcookie(char* userid, char* passwd)
 	ret = curl_easy_perform(hnd);
 	curl_easy_cleanup(hnd);
 	fclose(essen);
-        if(find("kalendera","falsches Passwort")) return 0; else return 1;
+        if(find("kalendera","falsches Passwort")) return 0; //0- simply wrong password
+        else if(find("kalendera","Fehleingabe des Passwortes")) return 2; //account is blocked for maximum 30 minutes
+             else return 1;//alright
         //return (int)ret;
 	
 	
@@ -616,7 +618,7 @@ void gethiddenandbestellt()
 {
 	char menufilename[8];
 	char menunumber[2];
-	hidden=(char***)calloc(anzwoche,sizeof(char**));
+
 	for(int i=0;i<anzwoche; i++)
 	{
 		int numlines=0;
@@ -625,8 +627,8 @@ void gethiddenandbestellt()
 		char* tmp2=(char*)malloc(sizeof(char)*300);
 		char* puffer=(char*)malloc(sizeof(char)*50);
 		FILE* listhidden;
-		hidden[i]=(char**)calloc(35,sizeof(char*));
-		for(int k=0;k<35;k++) {hidden[i][k]=(char*)malloc(50);strcpy(hidden[i][k],"\0");}
+                //hidden[i]=(char**)calloc(35,sizeof(char*));
+                //for(int k=0;k<35;k++) {hidden[i][k]=(char*)malloc(50);strcpy(hidden[i][k],"\0");}
 		if(strlen(slynmbwochen[i])>2)
 		{
 			strcpy(menufilename,"menu");
@@ -655,7 +657,7 @@ void gethiddenandbestellt()
 		free(tmp2);
 		free(puffer);
 	}
-	bergruen=(char***)calloc(anzwoche,sizeof(char**));
+        //bergruen=(char***)calloc(anzwoche,sizeof(char**));
 	for(int i=0;i<anzwoche; i++)
 	{
 		int numlines=0;
@@ -664,8 +666,8 @@ void gethiddenandbestellt()
 		char* tmp2=(char*)malloc(sizeof(char)*300);
 		char* puffer=(char*)malloc(sizeof(char)*50);
 		FILE* listgruen;
-		bergruen[i]=(char**)calloc(35,sizeof(char*));
-		for(int k=0;k<35;k++) {bergruen[i][k]=(char*)malloc(50);strcpy(bergruen[i][k],"\0");}
+
+                // for(int k=0;k<35;k++) {bergruen[i][k]=(char*)malloc(50);strcpy(bergruen[i][k],"\0");}
 		if(strlen(slynmbwochen[i])>2)
 		{
 			strcpy(menufilename,"menu");
@@ -695,7 +697,7 @@ void gethiddenandbestellt()
 		free(tmp2);
 		free(puffer);
 	}
-	bergruend=(char***)calloc(anzwoche,sizeof(char**));
+        //bergruend=(char***)calloc(anzwoche,sizeof(char**));
 	for(int i=0;i<anzwoche; i++)
 	{
 		int numlines=0;
@@ -704,13 +706,12 @@ void gethiddenandbestellt()
 		char* tmp2=(char*)malloc(sizeof(char)*300);
 		char* puffer=(char*)malloc(sizeof(char)*50);
 		FILE* listgruend;
-		bergruend[i]=(char**)calloc(35,sizeof(char*));
-		for(int k=0;k<35;k++) {bergruend[i][k]=(char*)malloc(50);strcpy(bergruend[i][k],"\0");}
+        //	for(int k=0;k<35;k++) {bergruend[i][k]=(char*)malloc(50);strcpy(bergruend[i][k],"\0");}
 		if(strlen(slynmbwochen[i])>2)
 		{
 			strcpy(menufilename,"menu");
 			menunumber[0]=48+i; menunumber[1]='\0';
-			strcat(menufilename,menunumber); strcat(menufilename,"\0");
+                        strcat(menufilename,menunumber); strcat(menufilename,"\0");
 			find(menufilename,"gruen pointer\"",3);
 			find("findoutput","type=\"hidden\" name=\"fld_");
 			listgruend=fopen("findoutput","r");
@@ -722,12 +723,15 @@ void gethiddenandbestellt()
 			for(int j=0;j<numlines;j++)
 			{
 				fgets(tmp,300,listgruend);
+                                if(strstr(tmp,"checkbox")!=NULL)
+                                {
 				tmp2=strcpy(tmp2,tmp);
 				strcpy(puffer,cut2(tmp2,"\"",12,12));
 				tmp2=strcpy(tmp2,tmp);
 				strcat(puffer,"=");
 				strcat(puffer,cut2(tmp2,"\"",14,14));
 				bergruend[i][j]=strcpy(bergruend[i][j],puffer);
+                                }
 			}
 			fclose(listgruend);
 		}
@@ -739,30 +743,30 @@ void gethiddenandbestellt()
 
 void getdatensatz()
 {
-	wirkbestellen=(int**)calloc(anzwoche,sizeof(int*));
+        //wirkbestellen=(int**)calloc(anzwoche,sizeof(int*));
 	for(int i=0;i<anzwoche;i++)
 	{
-		wirkbestellen[i]=(int*)malloc(7*sizeof(int));
+                //wirkbestellen[i]=(int*)malloc(7*sizeof(int));
 		for(int j=0;j<7;j++)
 		{
-			wirkbestellen[i][j]=0;
+                        //wirkbestellen[i][j]=0;
 			if(setdates[i][j]==1) wirkbestellen[i][j]=1; //ACHTUNG: Das kann noch zu viel sein!!
 		}
 	}
-	wocheplustagplusdaten=(char****)calloc(anzwoche,sizeof(char***));
-	for(int i=0;i<anzwoche;i++) 
-	{
-		wocheplustagplusdaten[i]=(char***)calloc(7,sizeof(char**));
-		for(int j=0;j<7;j++) 
-		{
-			wocheplustagplusdaten[i][j]=(char**)calloc(9,sizeof(char*));
-			for(int k=0;k<9;k++) 
-			{
-				wocheplustagplusdaten[i][j][k]=(char*)malloc(150*sizeof(char));
-				strcpy(wocheplustagplusdaten[i][j][k],"\0");
-			}
-		}
-	}
+//	wocheplustagplusdaten=(char****)calloc(anzwoche,sizeof(char***));
+//	for(int i=0;i<anzwoche;i++)
+//	{
+//		wocheplustagplusdaten[i]=(char***)calloc(7,sizeof(char**));
+//		for(int j=0;j<7;j++)
+//		{
+//			wocheplustagplusdaten[i][j]=(char**)calloc(9,sizeof(char*));
+//			for(int k=0;k<9;k++)
+//			{
+//				wocheplustagplusdaten[i][j][k]=(char*)malloc(150*sizeof(char));
+//				strcpy(wocheplustagplusdaten[i][j][k],"\0");
+//			}
+//		}
+//	}
 	char menufilename[8];
 	char menunumber[2];
 	for(int i=0;i<anzwoche;i++)
