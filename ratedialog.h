@@ -2,6 +2,7 @@
 #define RATEDIALOG_H
 
 #include <QDialog>
+#include "ui_ratedialog.h"
 
 namespace Ui {
     class RateDialog;
@@ -13,10 +14,11 @@ class RateDialog : public QDialog
 
 public:
     explicit RateDialog(QWidget *parent = 0, QString zutat = "");
+     Ui::RateDialog *ui;
     ~RateDialog();
 
 private:
-    Ui::RateDialog *ui;
+
 };
 
 #endif // RATEDIALOG_H

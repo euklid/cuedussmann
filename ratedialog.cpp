@@ -1,5 +1,4 @@
 #include "ratedialog.h"
-#include "ui_ratedialog.h"
 
 RateDialog::RateDialog(QWidget *parent, QString zutat) :
     QDialog(parent),
