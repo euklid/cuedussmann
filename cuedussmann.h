@@ -43,7 +43,10 @@ private:
     void getsel_datums();
     void setcombobox(int startweek, int endweek);
     void createmenufiles();
-    int find(const char inputfile[], const char searchstring[], int linesafter=0);
+    void getdatensatz();
+    void getratingandbestelldaten();
+    void sendbestellung();
+    //int find(const char inputfile[], const char searchstring[], int linesafter=0);
 
 
 };
