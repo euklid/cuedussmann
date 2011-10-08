@@ -10,8 +10,10 @@ cuedussmann::cuedussmann(QWidget *parent) :
     QMainWindow(parent)
 {
     initialized=0;
+    wegonnaquit=0;
     setupUi(this);
     initialized=initialize();
+    if(initialized==31) wegonnaquit=1;
     connect(comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(parsemenufile(int))); //combobox must be connected with the checkboxes, to set them checked or not, the checkboxes must be connected with the cell clicked functions...
     //TODO:
     /* now the menufiles should be downloaded (OK) and BE PARSED (OK), so that the actual week is shown in the table(OK). The combobox must
@@ -57,9 +59,9 @@ int cuedussmann::initialize()
             {
                 cuedussmann::on_actionUID_PWD_ndern_triggered();
             }
-            if(ret==QMessageBox::RejectRole)
+            if(ret==262144 || ret==0) //is for acceptrole
             {
-                QApplication::quit();break;
+                qApp->quit(); return 31;
 
             }
         }
@@ -201,6 +203,11 @@ void cuedussmann::on_actionUID_PWD_ndern_triggered()
             free(slynmbwochen);
             free(changedmenu);
             free(ratings);
+            free(wocheplustagplusdaten);
+            free(hidden);
+            free(bergruen);
+            free(bergruend);
+            free(bestelldaten);
             initialized=0;
         }
         initialized=initialize();

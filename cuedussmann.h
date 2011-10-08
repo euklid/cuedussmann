@@ -9,6 +9,7 @@ class cuedussmann : public QMainWindow, public Ui::cuedussmann
 
 public:
     explicit cuedussmann(QWidget *parent = 0);
+    int wegonnaquit;
 
 private slots:
 
