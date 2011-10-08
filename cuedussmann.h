@@ -36,6 +36,8 @@ private slots:
 
     void on_actionEssen_bestellen_lassen_triggered();
 
+    void on_actionSpeiseplan_drucken_triggered();
+
 private:
     int initialized;
     int initialize();
@@ -47,6 +49,7 @@ private:
     void getdatensatz();
     void getratingandbestelldaten();
     void sendbestellung();
+    QString nameday(int day);
     //int find(const char inputfile[], const char searchstring[], int linesafter=0);
 
 

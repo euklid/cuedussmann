@@ -4,6 +4,11 @@
 #include "ratedialog.h"
 #include <QString>
 #include <QMessageBox>
+#include <QFile>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QTextDocument>
+#include <QTextStream>
 using namespace core;
 int*** changedmenu;
 cuedussmann::cuedussmann(QWidget *parent) :
@@ -1255,7 +1260,62 @@ void cuedussmann::on_actionEssen_bestellen_lassen_triggered() //now big fat rout
     free(changedmenu);
     free(ratings);
     initialized=0;
-     initialized=initialize();
+    initialized=initialize();
 
 }
 
+QString cuedussmann::nameday(int day)
+{
+    switch(day%7)
+    {
+    case 0: return QString("Montag\t"); break;
+    case 1: return QString("Dienstag\t"); break;
+    case 2: return QString("Mittwoch\t"); break;
+    case 3: return QString("Donnerstag\t"); break;
+    case 4: return QString("Freitag\t");break;
+    case 5: return QString("Samstag\t"); break;
+    case 6: return QString("Sonntag\t"); break;
+    }
+}
+
+void cuedussmann::on_actionSpeiseplan_drucken_triggered() //how to access to all names? --> parsemenufile!!!
+{
+    FILE* druckplan;
+    QString planname("Speiseplan_");
+    planname.append(QString::fromLocal8Bit(uid).simplified());
+    druckplan=fopen(qPrintable(planname),"w+");
+    for(int i=0; i<comboBox->count();i++)
+    {
+        parsemenufile(i);
+        fputs(qPrintable(comboBox->itemText(i).append("\n")),druckplan);
+        fputs("---------------------------------------\n",druckplan);
+        for(int j=0;j<7;j++)
+        {
+            for(int k=0;k<3;k++)
+            {
+                if(tableWidget->item(k,j)->background().color().green()==255) fputs( qPrintable(nameday(j).append(QString::fromLocal8Bit("Menü ")).append(QString::number(k+1)).append("\t").append( tableWidget->item(k,j)->text().simplified().append("\n") ) ),druckplan );
+            }
+        }
+        fputs("\n",druckplan);
+    }
+    fclose(druckplan);
+    QFile printplan(planname);
+    QTextDocument* foodplan = new QTextDocument();
+    if(printplan.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        QTextStream plantext(&printplan);
+        foodplan->setPlainText(plantext.readAll());
+        printplan.close();
+    }
+    foodplan->setDefaultFont(QFont(QString("Times New Roman"),10));
+    QPrinter printer;
+    printer.setPageMargins(20,20,20,20,QPrinter::Millimeter);
+        QPrintDialog *dlg = new QPrintDialog(&printer, this);
+        if (dlg->exec() != QDialog::Accepted)
+            return;
+
+        foodplan->print(&printer);
+        delete dlg;
+        delete foodplan;
+
+}
