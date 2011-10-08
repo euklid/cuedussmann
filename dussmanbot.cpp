@@ -249,7 +249,7 @@ char* frstnchr(char* input, int n)
 int find(const char inputfile[], const char searchstring[], int linesafter)
 {
     FILE *INPUT; //File-Pointer
-    INPUT = fopen(inputfile, "rt"); //Open File
+    INPUT = fopen(inputfile, "r"); //Open File
     if (INPUT == NULL) printf("Error!");
 
     int numlines = 0;
@@ -268,7 +268,8 @@ int find(const char inputfile[], const char searchstring[], int linesafter)
     {
         lines[i] = (char*) malloc(2000 * sizeof (char*));
         fgets(lines[i], 2000, INPUT);
-    }     
+    }
+    fclose(INPUT);
     int foundlines[numlines];
     for (int i = 0; i < numlines; i++) 
     {

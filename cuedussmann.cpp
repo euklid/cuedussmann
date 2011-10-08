@@ -403,10 +403,11 @@ void cuedussmann::on_checkBox_8_clicked()
 {
     if(!checkBox->isChecked())
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,0)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,0)->flags()!=Qt::NoItemFlags)) needed--;
+            if(tableWidget->item(i,0)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,0)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,0)->flags()!=Qt::NoItemFlags)) needed=-0.34;
             if((tableWidget->item(i,0)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,0)->background().color().green()>0) || (tableWidget->item(i,0)->background().color().red()<255))) needed--;
         }
         if(needed>0)
@@ -418,10 +419,11 @@ void cuedussmann::on_checkBox_8_clicked()
 
     if(!checkBox_2->isChecked())
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,1)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,1)->flags()!=Qt::NoItemFlags)) needed--;
+            if(tableWidget->item(i,1)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,1)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,1)->flags()!=Qt::NoItemFlags)) needed=-0.34;
             if((tableWidget->item(i,1)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,1)->background().color().green()>0) || (tableWidget->item(i,1)->background().color().red()<255))) needed--;
         }
         if(needed>0)
@@ -433,10 +435,11 @@ void cuedussmann::on_checkBox_8_clicked()
 
     if(!checkBox_3->isChecked())
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,2)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,2)->flags()!=Qt::NoItemFlags)) needed--;
+            if(tableWidget->item(i,2)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,2)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,2)->flags()!=Qt::NoItemFlags)) needed=-0.34;
             if((tableWidget->item(i,2)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,2)->background().color().green()>0) || (tableWidget->item(i,2)->background().color().red()<255))) needed--;
         }
         if(needed>0)
@@ -448,10 +451,11 @@ void cuedussmann::on_checkBox_8_clicked()
 
     if(!checkBox_4->isChecked())
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,3)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)) needed--;
+            if(tableWidget->item(i,3)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,3)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)) needed=-0.34;
             if((tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255))) needed--;
         }
         if(needed>0)
@@ -463,10 +467,11 @@ void cuedussmann::on_checkBox_8_clicked()
 
     if(!checkBox_5->isChecked())
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,4)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)) needed--;
+            if(tableWidget->item(i,4)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,4)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)) needed=-0.34;
             if((tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,4)->background().color().green()>0) || (tableWidget->item(i,4)->background().color().red()<255))) needed--;
         }
         if(needed>0)
@@ -478,10 +483,11 @@ void cuedussmann::on_checkBox_8_clicked()
 
     if(!checkBox_6->isChecked())
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,5)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,5)->flags()!=Qt::NoItemFlags)) needed--;
+            if(tableWidget->item(i,5)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,5)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,5)->flags()!=Qt::NoItemFlags)) needed=-0.34;
             if((tableWidget->item(i,5)->flags()!=Qt::NoItemFlags)&& ((tableWidget->item(i,5)->background().color().green()>0) || (tableWidget->item(i,5)->background().color().red()<255))) needed--;
         }
         if(needed>0)
@@ -493,10 +499,11 @@ void cuedussmann::on_checkBox_8_clicked()
 
     if(!checkBox_7->isChecked())
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if((tableWidget->item(i,6)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,6)->flags()!=Qt::NoItemFlags)) needed--;
+            if(tableWidget->item(i,6)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,6)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,6)->flags()!=Qt::NoItemFlags)) needed=-0.34;
             if((tableWidget->item(i,6)->flags()!=Qt::NoItemFlags) && ((tableWidget->item(i,6)->background().color().green()>0) || (tableWidget->item(i,6)->background().color().red()<255))) needed--;
         }
         if(needed>0)
@@ -900,15 +907,17 @@ void cuedussmann::getratingandbestelldaten()
                                         int summand=0;
                                         char* bewertung=(char*)malloc(5); strcpy(bewertung,"\0");
                                         int foodcount=0;
-                                        char* alllow;
+                                        char* alllow=(char*)malloc(70*sizeof(char));
                                         char* storing=(char*)malloc(100); strcpy(storing,"\0");
+                                        char* ratingfilename=(char*)malloc(15); strcpy(ratingfilename,"ratings_");
+                                        strcat(ratingfilename,uid);
                                         for(int k=0; k<numwords;k++)
                                         {
                                                 strcpy(storing,"\0"); strcpy(bewertung,"\0");
                                                 summand=0;
-                                                alllow=strdup(hackstring[k]);
+                                                strcpy(alllow, hackstring[k]);
                                                 strlwr(alllow);
-                                                if((strlen(hackstring[k])>0) && (core::find("ratings",alllow)))
+                                                if((strlen(hackstring[k])>0) && (core::find(ratingfilename,alllow)))
                                                 {
                                                         foodcount++;
                                                         tmp=frstln(tmp,100,"findoutput");
@@ -920,14 +929,14 @@ void cuedussmann::getratingandbestelldaten()
                                                         }
                                                         bew+=summand;
                                                 }
-                                                if((strlen(hackstring[k])>0) && (core::find("ratings",alllow)==0))
+                                                if((strlen(hackstring[k])>0) && (core::find(ratingfilename,alllow)==0))
                                                 {
                                                         foodcount++;
                                                         RateDialog *rate = new RateDialog(0,QString::fromLatin1(hackstring[k]));
                                                         rate->exec();
                                                         summand=rate->ui->spinBox->value();
                                                         delete rate;
-                                                        ratinglist=fopen("ratings","a+");
+                                                        ratinglist=fopen(ratingfilename,"a+");
                                                         if(summand<10)
                                                         {
                                                                 strcpy(storing,"  \0");
@@ -941,14 +950,14 @@ void cuedussmann::getratingandbestelldaten()
                                                         fclose(ratinglist);
                                                         bew+=summand;
                                                 }
-                                                free(alllow);
                                         }
                                         if(ratings[i][j][p]<=10) ratings[i][j][p]=bew/foodcount;
                                         free(tmp);
+                                        free(ratingfilename);
+                                        free(alllow);
                                         free(bewertung);
                                         free(hackstring);
                                         free(storing);
-
                                 }
 
                         }
@@ -995,8 +1004,8 @@ void cuedussmann::getratingandbestelldaten()
 void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten für die Woche, als auch das senden der bestätigung!!!, //praktisch die letzte Funktion auf dem Schlachtfeld
 {
         int bestellsumme=0; //summiert einfach die wirkbestellen, sodass man weiß, ob diese woche überhaupt bestellt werden soll
-        char* postfield;
-        postfield=(char*)malloc(1000); strcpy(postfield,"\0");
+        char postfield[1000];
+        strcpy(postfield,"\0");
         char* menufilename=(char*)malloc(8);
         char* menunumber=(char*)malloc(3);
         FILE* bestbest1[anzwoche]; //Bestellbestätigung 1;
@@ -1219,7 +1228,7 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten für 
                 }
 
         } //STOPP, diese for-schleife darf ich nicht verlassen, da das postfield kein array ist!!
-        free(postfield);
+        //free(postfield);
         free(menunumber);
         free(menufilename);
 }
