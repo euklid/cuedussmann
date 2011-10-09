@@ -14,15 +14,27 @@ SOURCES += main.cpp\
         cuedussmann.cpp \
     dussmanbot.cpp \
     pwduidialog.cpp \
-    ratedialog.cpp
+    ratedialog.cpp \
+    howtouse.cpp \
+    thanks.cpp
 
 HEADERS  += cuedussmann.h \
     pwduidialog.h \
-    ratedialog.h
+    ratedialog.h \
+    howtouse.h \
+    thanks.h
 
 FORMS    += cuedussmann.ui \
     pwduidialog.ui \
-    ratedialog.ui
+    ratedialog.ui \
+    howtouse.ui \
+    thanks.ui
+
+
+
+
+
+
 
 
 

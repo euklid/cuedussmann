@@ -279,14 +279,14 @@
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>90</x>
       <y>50</y>
       <width>91</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestellt werden soll.
 Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
     </property>
     <property name="text">
@@ -296,14 +296,14 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
    <widget class="QCheckBox" name="checkBox_2">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>220</x>
       <y>50</y>
       <width>91</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestellt werden soll.
 Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
     </property>
     <property name="text">
@@ -313,14 +313,14 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
    <widget class="QCheckBox" name="checkBox_3">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>350</x>
       <y>50</y>
       <width>96</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestellt werden soll.
 Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
     </property>
     <property name="text">
@@ -330,14 +330,14 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
    <widget class="QCheckBox" name="checkBox_4">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>480</x>
       <y>50</y>
       <width>96</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestellt werden soll.
 Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
     </property>
     <property name="text">
@@ -347,14 +347,14 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
    <widget class="QCheckBox" name="checkBox_5">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>610</x>
       <y>50</y>
       <width>96</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestellt werden soll.
 Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
     </property>
     <property name="text">
@@ -364,14 +364,14 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
    <widget class="QCheckBox" name="checkBox_6">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>740</x>
       <y>50</y>
       <width>96</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestellt werden soll.
 Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
     </property>
     <property name="text">
@@ -381,14 +381,14 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
    <widget class="QCheckBox" name="checkBox_7">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>870</x>
       <y>50</y>
       <width>96</width>
       <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestelltwerden soll.
+     <string>Damit wird fest gelegt, ob für einen Tag, bei dem noch NICHTS bestellt ist, bestellt werden soll.
 Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Kästchen angehakt.</string>
     </property>
     <property name="text">
@@ -435,7 +435,16 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
     <addaction name="actionEssen_bestellen_lassen"/>
     <addaction name="actionSpeiseplan_drucken"/>
    </widget>
+   <widget class="QMenu" name="menu_ber">
+    <property name="title">
+     <string>Hilfe</string>
+    </property>
+    <addaction name="actionBedienungshinweise"/>
+    <addaction name="action_ber"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
    <addaction name="menuAktion"/>
+   <addaction name="menu_ber"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionUID_PWD_ndern">
@@ -451,6 +460,21 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
   <action name="actionSpeiseplan_drucken">
    <property name="text">
     <string>Speiseplan drucken</string>
+   </property>
+  </action>
+  <action name="actionBedienungshinweise">
+   <property name="text">
+    <string>Bedienungshinweise</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="action_ber">
+   <property name="text">
+    <string>Über...</string>
    </property>
   </action>
  </widget>

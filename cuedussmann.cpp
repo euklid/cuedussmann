@@ -1,3 +1,20 @@
+/*
+This file is part of cuedussmann.
+
+    cuedussmann is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    cuedussmann is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with cuedussmann.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 #include "cuedussmann.h"
 #include "dussmanbot.cpp"
 #include "pwduidialog.h"
@@ -9,6 +26,8 @@
 #include <QPrintDialog>
 #include <QTextDocument>
 #include <QTextStream>
+#include "howtouse.h"
+#include "thanks.h"
 using namespace core;
 int*** changedmenu;
 cuedussmann::cuedussmann(QWidget *parent) :
@@ -545,13 +564,14 @@ void cuedussmann::on_checkBox_clicked()
     }
     else
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,0)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,0)->background().color().green()>0) || (tableWidget->item(i,0)->background().color().red()<255)) needed--;
+            if(tableWidget->item(i,0)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,0)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,0)->flags()!=Qt::NoItemFlags)) needed=-0.34;
+            if((tableWidget->item(i,0)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,0)->background().color().green()>0) || (tableWidget->item(i,0)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox->setChecked(true);
             setdates[comboBox->currentIndex()][0]=1;
@@ -568,13 +588,14 @@ void cuedussmann::on_checkBox_2_clicked()
     }
     else
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,1)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,1)->background().color().green()>0) || (tableWidget->item(i,1)->background().color().red()<255)) needed--;
+            if(tableWidget->item(i,1)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,1)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,1)->flags()!=Qt::NoItemFlags)) needed=-0.34;
+            if((tableWidget->item(i,1)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,1)->background().color().green()>0) || (tableWidget->item(i,1)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_2->setChecked(true);
             setdates[comboBox->currentIndex()][1]=1;
@@ -591,13 +612,14 @@ void cuedussmann::on_checkBox_3_clicked()
     }
     else
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,2)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,2)->background().color().green()>0) || (tableWidget->item(i,2)->background().color().red()<255)) needed--;
+            if(tableWidget->item(i,2)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,2)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,2)->flags()!=Qt::NoItemFlags)) needed=-0.34;
+            if((tableWidget->item(i,2)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,2)->background().color().green()>0) || (tableWidget->item(i,2)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_3->setChecked(true);
             setdates[comboBox->currentIndex()][2]=1;
@@ -614,13 +636,14 @@ void cuedussmann::on_checkBox_4_clicked()
     }
     else
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,3)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255)) needed--;
+            if(tableWidget->item(i,3)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,3)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)) needed=-0.34;
+            if((tableWidget->item(i,3)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,3)->background().color().green()>0) || (tableWidget->item(i,3)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_4->setChecked(true);
             setdates[comboBox->currentIndex()][3]=1;
@@ -637,13 +660,14 @@ void cuedussmann::on_checkBox_5_clicked()
     }
     else
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,4)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,4)->background().color().green()>0) || (tableWidget->item(i,4)->background().color().red()<255)) needed--;
+            if(tableWidget->item(i,4)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,4)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)) needed=-0.34;
+            if((tableWidget->item(i,4)->flags()!=Qt::NoItemFlags)&&((tableWidget->item(i,4)->background().color().green()>0) || (tableWidget->item(i,4)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_5->setChecked(true);
             setdates[comboBox->currentIndex()][4]=1;
@@ -660,13 +684,14 @@ void cuedussmann::on_checkBox_6_clicked()
     }
     else
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,5)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,5)->background().color().green()>0) || (tableWidget->item(i,5)->background().color().red()<255)) needed--;
+            if(tableWidget->item(i,5)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,5)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,5)->flags()!=Qt::NoItemFlags)) needed=-0.34;
+            if((tableWidget->item(i,5)->flags()!=Qt::NoItemFlags)&& ((tableWidget->item(i,5)->background().color().green()>0) || (tableWidget->item(i,5)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_6->setChecked(true);
             setdates[comboBox->currentIndex()][5]=1;
@@ -683,13 +708,14 @@ void cuedussmann::on_checkBox_7_clicked()
     }
     else
     {
-        int needed=1;
+        float needed=1;
         for(int i=0;i<3;i++)
         {
-            if(tableWidget->item(i,6)->background().style()==Qt::SolidPattern) needed--;
-            if((tableWidget->item(i,6)->background().color().green()>0) || (tableWidget->item(i,6)->background().color().red()<255)) needed--;
+            if(tableWidget->item(i,6)->flags()==Qt::NoItemFlags) needed-=0.34;
+            if((tableWidget->item(i,6)->background().style()==Qt::SolidPattern) && (tableWidget->item(i,6)->flags()!=Qt::NoItemFlags)) needed=-0.34;
+            if((tableWidget->item(i,6)->flags()!=Qt::NoItemFlags) && ((tableWidget->item(i,6)->background().color().green()>0) || (tableWidget->item(i,6)->background().color().red()<255))) needed--;
         }
-        if(needed>=0)
+        if(needed>0)
         {
             checkBox_7->setChecked(true);
             setdates[comboBox->currentIndex()][6]=1;
@@ -739,7 +765,7 @@ void cuedussmann::on_tableWidget_cellDoubleClicked(int row, int column)
     }
 }
 
-void cuedussmann::getdatensatz()//haut das mit dem cut für die rads und so auch noch bei den gruen hin?
+void cuedussmann::getdatensatz()
 {
         for(int i=0;i<anzwoche;i++)
         {
@@ -1328,4 +1354,21 @@ void cuedussmann::on_actionSpeiseplan_drucken_triggered() //how to access to all
         delete dlg;
         delete foodplan;
 
+}
+
+void cuedussmann::on_actionBedienungshinweise_triggered()
+{
+    HowToUse *help = new HowToUse();
+    help->show();
+}
+
+void cuedussmann::on_actionAbout_Qt_triggered()
+{
+    QApplication::aboutQt();
+}
+
+void cuedussmann::on_action_ber_triggered()
+{
+    Thanks *thank = new Thanks();
+    thank->show();
 }
