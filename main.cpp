@@ -4,7 +4,6 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setQuitOnLastWindowClosed(false);
     cuedussmann w;
     if(w.wegonnaquit==1) return 0;
     w.show();

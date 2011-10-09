@@ -18,7 +18,7 @@ cuedussmann::cuedussmann(QWidget *parent) :
     wegonnaquit=0;
     setupUi(this);
     initialized=initialize();
-    if(initialized==31) wegonnaquit=1;
+    if(initialized==31 || initialized==28) wegonnaquit=1;
     connect(comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(parsemenufile(int))); //combobox must be connected with the checkboxes, to set them checked or not, the checkboxes must be connected with the cell clicked functions...
     //TODO:
     /* now the menufiles should be downloaded (OK) and BE PARSED (OK), so that the actual week is shown in the table(OK). The combobox must
@@ -55,7 +55,7 @@ int cuedussmann::initialize()
         if(log==2)
         {
             QMessageBox msg;
-            msg.setText(QString("Der Account für die eingegebene Benutzernummer ist gesperrt. Tut mir sehr leid."));
+            msg.setText(QString::fromLocal8Bit("Der Account für die eingegebene Benutzernummer ist gesperrt. Tut mir sehr leid."));
             msg.setWindowTitle("Fehler beim Login");
             msg.setStandardButtons(QMessageBox::Abort);
             msg.addButton("Anderen Account einstellen",QMessageBox::AcceptRole);
@@ -69,6 +69,16 @@ int cuedussmann::initialize()
                 qApp->quit(); return 31;
 
             }
+        }
+        if(log==3)
+        {
+            QMessageBox msg;
+            msg.setText(QString::fromLocal8Bit("Es besteht keine Internetverbindung. Bitte versuche es später noch einmal"));
+            msg.setWindowTitle(QString::fromLocal8Bit("Verbindungsfehler"));
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.exec();
+            qApp->quit();
+            return 28;
         }
     }
     if(initialized==0)

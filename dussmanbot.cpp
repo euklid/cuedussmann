@@ -279,7 +279,6 @@ int find(const char inputfile[], const char searchstring[], int linesafter)
     {
         int position;
         position = 0;
-        int found = 0;
 		if( (strlen(lines[i]) - strlen(searchstring)) >=0)
 		{
 			if(strstr(lines[i],searchstring) != NULL)
@@ -442,7 +441,8 @@ int loginandcookie(char* userid, char* passwd)
 	fclose(essen);
         if(find("kalendera","falsches Passwort")) return 0; //0- simply wrong password
         else if(find("kalendera","Fehleingabe des Passwortes")) return 2; //account is blocked for maximum 30 minutes
-             else return 1;//alright
+        else if(find("kalendera","KW")==0) return 3; //no internet connection
+        else return 1;//alright
         //return (int)ret;
 	
 	
