@@ -71,7 +71,7 @@ private:
     void setcombobox(int startweek, int endweek);
     void createmenufiles();
     void getdatensatz();
-    void getratingandbestelldaten();
+    int getratingandbestelldaten();
     void sendbestellung();
     QString nameday(int day);
     //int find(const char inputfile[], const char searchstring[], int linesafter=0);

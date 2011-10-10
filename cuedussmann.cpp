@@ -56,6 +56,7 @@ cuedussmann::cuedussmann(QWidget *parent) :
 int cuedussmann::initialize()
 {    
     loadPWDUID();
+    if(wegonnaquit==27) return 31;
     int log;
     while((log=loginandcookie(uid, pwd))!=1)
     {
@@ -74,7 +75,7 @@ int cuedussmann::initialize()
         if(log==2)
         {
             QMessageBox msg;
-            msg.setText(QString::fromLocal8Bit("Der Account f¸r die eingegebene Benutzernummer ist gesperrt. Tut mir sehr leid."));
+            msg.setText(QString::fromLocal8Bit("Der Account f√ºr die eingegebene Benutzernummer ist gesperrt. Tut mir sehr leid."));
             msg.setWindowTitle("Fehler beim Login");
             msg.setStandardButtons(QMessageBox::Abort);
             msg.addButton("Anderen Account einstellen",QMessageBox::AcceptRole);
@@ -92,7 +93,7 @@ int cuedussmann::initialize()
         if(log==3)
         {
             QMessageBox msg;
-            msg.setText(QString::fromLocal8Bit("Es besteht keine Internetverbindung. Bitte versuche es sp‰ter noch einmal"));
+            msg.setText(QString::fromLocal8Bit("Es besteht keine Internetverbindung. Bitte versuche es sp√§ter noch einmal"));
             msg.setWindowTitle(QString::fromLocal8Bit("Verbindungsfehler"));
             msg.setStandardButtons(QMessageBox::Ok);
             msg.exec();
@@ -177,7 +178,7 @@ int cuedussmann::loadPWDUID()
     if( (strlen(uid)!=4) && (strlen(pwd)!=4) )
     {
         QMessageBox msg;
-        msg.setText("Die Studienzentrum-Version speichert keine Passwˆrter");
+        msg.setText("Die Studienzentrum-Version speichert keine Passw√∂rter");
         msg.setWindowTitle("Besondere Version");
         msg.addButton("Benutzername und Passwort setzen",QMessageBox::AcceptRole);
         int ret = msg.exec();
@@ -185,8 +186,8 @@ int cuedussmann::loadPWDUID()
         case QMessageBox::AcceptRole :
         {
             cuedussmann::on_actionUID_PWD_ndern_triggered();
-            return 1;
         }
+        if(wegonnaquit==27) return 0; else return 1;
         }
     }
 //    else
@@ -200,7 +201,7 @@ int cuedussmann::loadPWDUID()
 //        if(QString::fromAscii(uid).toInt()<1000 || QString::fromAscii(uid).toInt()>9999 || QString::fromAscii(pwd).toInt()<1000 || QString::fromAscii(pwd).toInt()>9999)
 //        {
 //            QMessageBox msg;
-//            msg.setText("Die Passwˆrter sind ");
+//            msg.setText("Die Passw√∂rter sind ");
 //            msg.setWindowTitle("Keine Datei vorhanden.");
 //            msg.addButton("Benutzername und Passwort setzen",QMessageBox::AcceptRole);
 //            int ret = msg.exec();
@@ -225,11 +226,6 @@ void cuedussmann::on_actionUID_PWD_ndern_triggered()
         uid[4]='\0';
         strcpy(pwd,qPrintable(dialog->lineEdit_2->text().simplified()));
         pwd[4]='\0';
-        //FILE* pwdfile;
-        //pwdfile=fopen("pwfile","w");
-        //fputs(strcat(uid,"\n"),pwdfile);
-        //fputs(strcat(pwd,"\n"),pwdfile);
-        //fclose(pwdfile);
         if(initialized==1)
         {
             anzwoche=0;startwoche=0;
@@ -247,6 +243,7 @@ void cuedussmann::on_actionUID_PWD_ndern_triggered()
         }
         initialized=initialize();
     }
+    else if (initialized==0) wegonnaquit=27;
     delete dialog;
 }
 
@@ -374,7 +371,7 @@ void cuedussmann::parsemenufile(int itemindex)
     auflistungen=fopen("findoutput","r");
     char* tmp=(char*)malloc(300);
     char* tmp2=(char*)malloc(300);
-    for(int j=0;j<numdays*3;j++) //21, weil bis dahin es zum sonntag men¸ 3 geht //fetter bug, was, wenn speiseplan nur bis freitag geht???!!!
+    for(int j=0;j<numdays*3;j++) //21, weil bis dahin es zum sonntag men√º 3 geht //fetter bug, was, wenn speiseplan nur bis freitag geht???!!!
     {
         fgets(tmp, 300,auflistungen);
         strcpy(tmp2,tmp);
@@ -808,21 +805,21 @@ void cuedussmann::getdatensatz()
                                 {
                                         cut2(tmp,">",2,7); //extracts name //hier muss noch fallunterscheidung wegen \n am ende rein!!!
                                         if((tmp[0]=='\n') &&(j<numdays)) {wirkbestellen[i][j%numdays]=0; continue;}
-                                        if((tmp[0]=='\n') && (j/numdays==1)){continue;} //--> die leeren Men¸2s bleiben '\0'
-                                        strcpy(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)],tmp); //Men¸namen abspeichern, damit man nach ihm in den folgenden Zeilen suchen kann, damit man die restlichen Daten ermitteln kann
-                                         //TODO: '\n' am Ende der Zeile lˆschen ('\r' auch(?) )
+                                        if((tmp[0]=='\n') && (j/numdays==1)){continue;} //--> die leeren Men√º2s bleiben '\0'
+                                        strcpy(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)],tmp); //Men√ºnamen abspeichern, damit man nach ihm in den folgenden Zeilen suchen kann, damit man die restlichen Daten ermitteln kann
+                                         //TODO: '\n' am Ende der Zeile l√∂schen ('\r' auch(?) )
                                 }
                         }
-                        //Nun weiﬂ man die Tage, f¸r welche MEN√úS bestellt m¸ssen, man weiﬂ nicht, wo Desserts bestellt werden m¸ssen
+                        //Nun wei√ü man die Tage, f√ºr welche MEN√É¬úS bestellt m√ºssen, man wei√ü nicht, wo Desserts bestellt werden m√ºssen
                         fclose(auflistungen);
                         FILE* essendata;
                         for(int j=0; j<numdays*3;j++)
                         {
                                 if(wirkbestellen[i][j%numdays]==1)
                                 {
-                                        if(strlen(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)])>2) //--> Ausschlieﬂen, dass f¸r ein leeres Men¸ 2 Daten gesammelt werden sollen
+                                        if(strlen(wocheplustagplusdaten[i][j%numdays][3*(j/numdays)])>2) //--> Ausschlie√üen, dass f√ºr ein leeres Men√º 2 Daten gesammelt werden sollen
                                         {
-                                                core::find(menufilename,wocheplustagplusdaten[i][j%numdays][3*(j/numdays)],2); //Suche nach Zeile ¸ber den Essensnamen
+                                                core::find(menufilename,wocheplustagplusdaten[i][j%numdays][3*(j/numdays)],2); //Suche nach Zeile √ºber den Essensnamen
                                                 core::find("findoutput","<input type=\"radio\" name=\"rad_");
                                                 essendata=fopen("findoutput","r");
                                                 fgets(tmp, 300, essendata);
@@ -837,15 +834,15 @@ void cuedussmann::getdatensatz()
                                 }
                         }
                         free(tmp);
-                                //--> Die Daten f¸r die Men¸s f¸r die wirklich zu bestellenden Tage sind abgespeichert.
-                                // -->TODO: Die Nummer des entsprechendenden Desserts l‰sst sich aus der rad_ nummer herleiten ==>
-                                // wenn die Suche nach der Nummer ergibt, dass die schon bereits gr¸n ist, wird die nicht bestellt,
+                                //--> Die Daten f√ºr die Men√ºs f√ºr die wirklich zu bestellenden Tage sind abgespeichert.
+                                // -->TODO: Die Nummer des entsprechendenden Desserts l√§sst sich aus der rad_ nummer herleiten ==>
+                                // wenn die Suche nach der Nummer ergibt, dass die schon bereits gr√ºn ist, wird die nicht bestellt,
                                 // ansonsten wird diese bestellt
                 }
         }
 }
 
-void cuedussmann::getratingandbestelldaten()
+int cuedussmann::getratingandbestelldaten()
 {
         FILE* ratinglist;
         char** hackstring;
@@ -855,10 +852,10 @@ void cuedussmann::getratingandbestelldaten()
                 {
                         if(wirkbestellen[i][j]==1)
                         {
-                                //Nun kommt Men¸1, ich stelle fest, dass ich eine for-schleife machen kann:
+                                //Nun kommt Men√º1, ich stelle fest, dass ich eine for-schleife machen kann:
                                 for(int p=0;p<3;p++)
                                 {
-                                        if(strlen(wocheplustagplusdaten[i][j][3*p])==0) continue; //DAS IST SCHWACHSINN!!! //Dadurch bleiben die Rating f¸r ein leeres Men¸ 2 0
+                                        if(strlen(wocheplustagplusdaten[i][j][3*p])==0) continue; //DAS IST SCHWACHSINN!!! //Dadurch bleiben die Rating f√ºr ein leeres Men√º 2 0
                                         char* tmp=(char*)malloc(150);
                                         char* pch;
                                         int numwords=1;
@@ -873,7 +870,7 @@ void cuedussmann::getratingandbestelldaten()
                                         numwords--;
                                         hackstring=(char**)calloc(numwords,sizeof(char*));
                                         for(int k=0;k<numwords;k++) {hackstring[k]=(char*)malloc(70*sizeof(char)); strcpy(hackstring[k],"\0");}
-                                        tmp=strcpy(tmp, wocheplustagplusdaten[i][j][3*p]); //<-- hier muss jetzt das mit den &amp; s und so weiter rein, damit das erst sp‰ter zerhackt wird. Auch sollte immer noch ein Leerzeichen f¸r ein Entferntes Ding reingebracht werden. Das wird ja eh wieder DANACH zur Trennung entfernt.
+                                        tmp=strcpy(tmp, wocheplustagplusdaten[i][j][3*p]); //<-- hier muss jetzt das mit den &amp; s und so weiter rein, damit das erst sp√§ter zerhackt wird. Auch sollte immer noch ein Leerzeichen f√ºr ein Entferntes Ding reingebracht werden. Das wird ja eh wieder DANACH zur Trennung entfernt.
                                         tmp=removeformattingsigns(tmp);
                                         pch=strtok(tmp," ,.1234567890");
                                         strcpy(hackstring[0],pch);
@@ -883,7 +880,7 @@ void cuedussmann::getratingandbestelldaten()
                                                 pch=strtok(NULL," ,.1234567890");
                                                 strcpy(hackstring[k],pch);
                                         }
-                                        for(int k=numwords-1;k>0;k--)//--> Bindestrichwˆrter werden geconcatenated ==> mehr leere strings.
+                                        for(int k=numwords-1;k>0;k--)//--> Bindestrichw√∂rter werden geconcatenated ==> mehr leere strings.
                                         {
                                                 if( hackstring[k][strlen(hackstring[k])-1] == '\n') hackstring[k][strlen(hackstring[k])-1]='\0'; //TODO: das ist dann nicht mehr, wenn das Todo gemacht wurde!!!
                                                 if(hackstring[k-1][strlen(hackstring[k-1])-1]=='-')
@@ -895,8 +892,8 @@ void cuedussmann::getratingandbestelldaten()
                                                         }
                                                         strcpy(hackstring[numwords-1],"\0");
                                                         //strcpy(hackstring[k],"\0"); <-- Das war doof, nun sind alle hackstrings "hintereinander", endene "\0"-en !!
-                                                } //Bindestriche zusammenf¸hren
-                                        } //DONE: " im " , " nach " nicht lˆschen, sowie die substantivierten Adjektive. diese Bindewˆrter f¸r concatenation ben¸tzen
+                                                } //Bindestriche zusammenf√ºhren
+                                        } //DONE: " im " , " nach " nicht l√∂schen, sowie die substantivierten Adjektive. diese Bindew√∂rter f√ºr concatenation ben√ºtzen
                                         for(int k=1;k<numwords-1;k++) //jetzt kommt die Entfernung von "mit", "dazu", "und", "an"
                                         {
                                                 if((strlen(hackstring[k])<=4) && (hackstring[k][0]!='\0'))
@@ -904,9 +901,9 @@ void cuedussmann::getratingandbestelldaten()
                                                         if((strstr(hackstring[k],"mit")!=NULL) || (strstr(hackstring[k],"dazu")) ||(strstr(hackstring[k],"und")!=NULL) ||(((strlen(hackstring[k])==2)) && (strstr(hackstring[k],"an")!=NULL)))
                                                         {
                                                                 strcpy(hackstring[k],"\0");
-                                                        } //--> die hackstrings, die noch zusammengehˆren wegen adjektive oder im , nach sind noch
-                                                          //"hintereinander", auch wenn es zwischen diesen "Komplexen" '\0'-er L¸cken gibt. --> bei
-                                                          //Bindestrichen muss aber nachger¸ckt werden!!!! Habe ich gemacht!
+                                                        } //--> die hackstrings, die noch zusammengeh√∂ren wegen adjektive oder im , nach sind noch
+                                                          //"hintereinander", auch wenn es zwischen diesen "Komplexen" '\0'-er L√ºcken gibt. --> bei
+                                                          //Bindestrichen muss aber nachger√ºckt werden!!!! Habe ich gemacht!
                                                 }
                                         }
                                         /*for(int k=0;k<numwords-1;k++) //nun die "<br />" s entfernen, falls vorhanden
@@ -941,12 +938,12 @@ void cuedussmann::getratingandbestelldaten()
                                                 if(strlen(hackstring[count])>0)
                                                 {
                                                         start=count;
-                                                        count++;//der nachfolgende String soll erst angeh‰ngt werden, nicht der gleiche zweimal
-                                                        while((count<numwords) && (strlen(hackstring[count])>0))//nur die nichtleeren Strings sollen zusammengef¸gt werden
+                                                        count++;//der nachfolgende String soll erst angeh√§ngt werden, nicht der gleiche zweimal
+                                                        while((count<numwords) && (strlen(hackstring[count])>0))//nur die nichtleeren Strings sollen zusammengef√ºgt werden
                                                         {
-                                                                hackstring[start]=strcat(hackstring[start],hackstring[count]);//die nachfolgend Strings anh‰ngen, bis ein leerer String erscheint
-                                                                strcpy(hackstring[count],"\0");//Wenn dieser String kopiert wurde, ihn lˆschen
-                                                                count++; //bereit f¸r den n‰chsten String
+                                                                hackstring[start]=strcat(hackstring[start],hackstring[count]);//die nachfolgend Strings anh√§ngen, bis ein leerer String erscheint
+                                                                strcpy(hackstring[count],"\0");//Wenn dieser String kopiert wurde, ihn l√∂schen
+                                                                count++; //bereit f√ºr den n√§chsten String
                                                         }
                                                 } else count++; //wenn dieser String gerade leer ist weiter machen bis man einen nichtleeren String findet
                                         } //wenn jetzt nichts schiefgegangen ist, dann sind die String fertig verbunden ;-)
@@ -985,7 +982,8 @@ void cuedussmann::getratingandbestelldaten()
                                                 {
                                                         foodcount++;
                                                         RateDialog *rate = new RateDialog(0,QString::fromLatin1(hackstring[k]));
-                                                        rate->exec();
+                                                        if(rate->exec())
+                                                        {
                                                         summand=rate->ui->spinBox->value();
                                                         delete rate;
                                                         ratinglist=fopen(ratingfilename,"a+");
@@ -1001,6 +999,16 @@ void cuedussmann::getratingandbestelldaten()
                                                         fputs(storing,ratinglist);
                                                         fclose(ratinglist);
                                                         bew+=summand;
+                                                        } else
+                                                        {
+                                                            free(tmp);
+                                                            free(ratingfilename);
+                                                            free(alllow);
+                                                            free(bewertung);
+                                                            free(hackstring);
+                                                            free(storing);
+                                                            return 0;
+                                                        }
                                                 }
                                         }
                                         if(ratings[i][j][p]<=10) ratings[i][j][p]=bew/foodcount;
@@ -1051,18 +1059,19 @@ void cuedussmann::getratingandbestelldaten()
                         if(wirkbestellen[i][j]==1)	printf("%s \n", bestelldaten[i][j]);
                 }
         }
+        return 1;
 }
 
-void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten f¸r die Woche, als auch das senden der best‰tigung!!!, //praktisch die letzte Funktion auf dem Schlachtfeld
+void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten f√ºr die Woche, als auch das senden der best√§tigung!!!, //praktisch die letzte Funktion auf dem Schlachtfeld
 {
-        int bestellsumme=0; //summiert einfach die wirkbestellen, sodass man weiﬂ, ob diese woche ¸berhaupt bestellt werden soll
+        int bestellsumme=0; //summiert einfach die wirkbestellen, sodass man wei√ü, ob diese woche √ºberhaupt bestellt werden soll
         char postfield[1000];
         strcpy(postfield,"\0");
         char* menufilename=(char*)malloc(8);
         char* menunumber=(char*)malloc(3);
-        FILE* bestbest1[anzwoche]; //Bestellbest‰tigung 1;
+        FILE* bestbest1[anzwoche]; //Bestellbest√§tigung 1;
         FILE* bestbest2[anzwoche]; //Der User soll nichts davon sehen...
-        for(int i=0;i<anzwoche;i++) //Das ist doof, wir sollten bereits hier schon unterscheiden, ob f¸r die Woche ¸berhaupt bestellt werden soll :DONE Done
+        for(int i=0;i<anzwoche;i++) //Das ist doof, wir sollten bereits hier schon unterscheiden, ob f√ºr die Woche √ºberhaupt bestellt werden soll :DONE Done
         {
                 bestellsumme=0;
                 for(int j=0;j<7;j++) bestellsumme+=wirkbestellen[i][j];
@@ -1108,9 +1117,9 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten f¸r d
                                         strcat(postfield,bestelldaten[i][j]);
                                 }
                         }
-                        for(int j=0;j<35;j++) //nun kommen die fehlenden Desserts, hier men¸ bereits gr¸n, aber dessert noch nicht
+                        for(int j=0;j<35;j++) //nun kommen die fehlenden Desserts, hier men√º bereits gr√ºn, aber dessert noch nicht
                         {
-                                if((strlen(bergruen[i][j])>0) && (strstr(bergruen[i][j],"rad_")!=NULL)/* bereits gr¸n, sodass es rad enth‰lt, die nummer, davon das entsprechende fld, gucken, ob das schon gr¸n ist*/)//(wirkbestellen([i][j]==1) //das ist schwachsinn!//nun die Desserts:-->men¸namen benˆtigt.
+                                if((strlen(bergruen[i][j])>0) && (strstr(bergruen[i][j],"rad_")!=NULL)/* bereits gr√ºn, sodass es rad enth√§lt, die nummer, davon das entsprechende fld, gucken, ob das schon gr√ºn ist*/)//(wirkbestellen([i][j]==1) //das ist schwachsinn!//nun die Desserts:-->men√ºnamen ben√∂tigt.
                                 {
                                         char* dessertstring=(char*)malloc(25);strcpy(dessertstring,"\0");
                                         char* tmp=(char*)malloc(150); tmp=strcpy(tmp,bergruen[i][j]);
@@ -1130,7 +1139,7 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten f¸r d
                                         free(tmp);
                                 }
                         }
-                        for(int j=0;j<7;j++)//hier zu bestellendes Men¸ und gucken, ob dessert schon bestellt ist oder noch nicht, wenn nicht, dann halt an postfield anh‰ngen	/*if(das gleiche wie oben, bloﬂ bei dem bestelldata men¸ die nummer nehmen, dann fld gucken, ob das schon gr¸n ist) */
+                        for(int j=0;j<7;j++)//hier zu bestellendes Men√º und gucken, ob dessert schon bestellt ist oder noch nicht, wenn nicht, dann halt an postfield anh√§ngen	/*if(das gleiche wie oben, blo√ü bei dem bestelldata men√º die nummer nehmen, dann fld gucken, ob das schon gr√ºn ist) */
                         {
                                 if(wirkbestellen[i][j]==1)
                                 {
@@ -1152,18 +1161,18 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten f¸r d
                                         free(tmp);
                                 }
                         }//nun ist das POST-Field fertig, jetzt kommt das Senden und das empfangen der neuen Datei.
-                        //Da wegen der ersten if-Bedingung eine Bestellung erfolgen muss( scheiﬂe, was ist, wenn nur men¸ gruen, aber keine desserts???, hmm, die desserts werden dann nicht mehr bestellt)	stimmt. da hat man halt pech, kann weiter entwickelt werden, es geht um das KONZEPT
+                        //Da wegen der ersten if-Bedingung eine Bestellung erfolgen muss( schei√üe, was ist, wenn nur men√º gruen, aber keine desserts???, hmm, die desserts werden dann nicht mehr bestellt)	stimmt. da hat man halt pech, kann weiter entwickelt werden, es geht um das KONZEPT
 
                         //--------------------------------------------------------------------------------------------
-                        //Die erste Best‰tigung herunterladen
+                        //Die erste Best√§tigung herunterladen
                         //--------------------------------------------------------------------------------------------
                         printf("Der erste postcode: %s",postfield);
                         fflush(stdout);
-                        strcpy(menufilename,"bstst"); //Das soll die erste Bestellbest‰tigung werden;
+                        strcpy(menufilename,"bstst"); //Das soll die erste Bestellbest√§tigung werden;
                         menunumber[0]=48+i; menunumber[1]='\0';
                         strcat(menufilename,menunumber); strcat(menufilename,"\0");
                         bestbest1[i]=fopen(menufilename,"w");
-                        CURLcode ret; //achtung, diese mehrfachen rets f¸hren zu fehlern--> umbenennen
+                        CURLcode ret; //achtung, diese mehrfachen rets f√ºhren zu fehlern--> umbenennen
                         CURL *hnd = curl_easy_init();
                         curl_easy_setopt(hnd, CURLOPT_WRITEDATA, bestbest1[i]);
                         curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
@@ -1179,14 +1188,14 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten f¸r d
                         fclose(bestbest1[i]);
 
                         //------------------------------------------------------------------------------------------
-                        //Die hidden-values wegen bestellen und so aus der ersten Best‰tigung extrahieren
+                        //Die hidden-values wegen bestellen und so aus der ersten Best√§tigung extrahieren
                         //------------------------------------------------------------------------------------------
                         /*
                          * action string extrahieren, damit man sich die Suche nach starttag sparen kann
                          * Achtung, die bereits gespeicherten Daten wegen hidden und so nicht nochmal schicken, da dort auch falsche Daten drin sind
                          *  ==> nochmal die neuen hidden werte ermitteln, auf js_hidden aufpassen (nach "hidden suchen) --> bis inklusive zeile bestellpreis einlesen, den rest
                          *      nicht mehr als hidden-zeugs abspeichern
-                         * um die stelle f¸r schneiden wegen bestellenfoo zu ermitteln einfach ein strstr(zeile,"best_") machen
+                         * um die stelle f√ºr schneiden wegen bestellenfoo zu ermitteln einfach ein strstr(zeile,"best_") machen
                          */
                         char* actionurl=(char*)malloc(120); strcpy(actionurl,"http://dussmann-lpf.rcs.de/index.php?m=150;0;1;3&a=akt_bestellen&");
                         char** newhidden;
@@ -1252,7 +1261,7 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten f¸r d
                         // Nun kommt das Senden dieses postfields an die zuvor ermittelte action-url
                         // gespeichert wird in einer extra-Datei
                         //-------------------------------------------------------------------------------------
-                        strcpy(menufilename,"bstbt"); //Das soll die zweite Bestellbest‰tigung werden;
+                        strcpy(menufilename,"bstbt"); //Das soll die zweite Bestellbest√§tigung werden;
                         menunumber[0]=48+i; menunumber[1]='\0';
                         strcat(menufilename,menunumber); strcat(menufilename,"\0");
                         bestbest2[i]=fopen(menufilename,"w");
@@ -1289,8 +1298,7 @@ void cuedussmann::on_actionEssen_bestellen_lassen_triggered() //now big fat rout
 {
     gethiddenandbestellt(); //save data in the hidden, bergruen and bergruend arrays
     getdatensatz();
-    getratingandbestelldaten();
-    sendbestellung();
+    if(getratingandbestelldaten()) sendbestellung();
     free(bestelldaten);
     free(wocheplustagplusdaten);
     anzwoche=0;startwoche=0;
@@ -1333,7 +1341,7 @@ void cuedussmann::on_actionSpeiseplan_drucken_triggered() //how to access to all
         {
             for(int k=0;k<3;k++)
             {
-                if(tableWidget->item(k,j)->background().color().green()==255) fputs( qPrintable(nameday(j).append(QString::fromLocal8Bit("Men¸ ")).append(QString::number(k+1)).append("\t").append( tableWidget->item(k,j)->text().simplified().append("\n") ) ),druckplan );
+                if(tableWidget->item(k,j)->background().color().green()==255) fputs( qPrintable(nameday(j).append(QString::fromLocal8Bit("Men√º ")).append(QString::number(k+1)).append("\t").append( tableWidget->item(k,j)->text().simplified().append("\n") ) ),druckplan );
             }
         }
         fputs("\n",druckplan);
