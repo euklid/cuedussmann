@@ -21,6 +21,7 @@ PwduiDialog::PwduiDialog(QWidget *parent, int u, int p) :
     QDialog(parent)
 {
     setupUi(this);
+    lineEdit_2->setEchoMode(QLineEdit::Password);
     if(u<999 || p<999) buttonBox->setEnabled(false); else
     {
         buttonBox->setEnabled(true) ;
