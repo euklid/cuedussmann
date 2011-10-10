@@ -29,20 +29,4 @@ FORMS    += cuedussmann.ui \
     ratedialog.ui \
     howtouse.ui \
     thanks.ui
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+RESOURCES = res.qrc
