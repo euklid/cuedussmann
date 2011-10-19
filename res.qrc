@@ -2,6 +2,5 @@
     <qresource prefix="/">
         <file>favicon.png</file>
         <file>logomini.png</file>
-        <file>logobearb2.png</file>
     </qresource>
 </RCC>
