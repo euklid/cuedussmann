@@ -66,6 +66,7 @@ int cuedussmann::initialize()
             msg.setText("Falsche Nutzernummer/Passwort Kombination");
             msg.setWindowTitle("Fehler beim Login");
             msg.addButton("Benutzername und Passwort neu setzen",QMessageBox::AcceptRole);
+            msg.setIconPixmap(QPixmap("logomini.png"));
             int ret = msg.exec();
             if(ret==QMessageBox::AcceptRole)
             {
@@ -78,6 +79,7 @@ int cuedussmann::initialize()
             msg.setText(QString::fromLocal8Bit("Der Account für die eingegebene Benutzernummer ist gesperrt. Tut mir sehr leid."));
             msg.setWindowTitle("Fehler beim Login");
             msg.setStandardButtons(QMessageBox::Abort);
+            msg.setIconPixmap(QPixmap("logomini.png"));
             msg.addButton("Anderen Account einstellen",QMessageBox::AcceptRole);
             int ret = msg.exec();
             if(ret==QMessageBox::AcceptRole)
@@ -96,6 +98,7 @@ int cuedussmann::initialize()
             msg.setText(QString::fromLocal8Bit("Es besteht keine Internetverbindung. Bitte versuche es später noch einmal"));
             msg.setWindowTitle(QString::fromLocal8Bit("Verbindungsfehler"));
             msg.setStandardButtons(QMessageBox::Ok);
+            msg.setIconPixmap(QPixmap("logomini.png"));
             msg.exec();
             qApp->quit();
             return 28;
@@ -180,6 +183,7 @@ int cuedussmann::loadPWDUID()
         msg.setText("Es wurde noch keine Passwortdatei erstellt.");
         msg.setWindowTitle("Keine Datei vorhanden.");
         msg.addButton("Benutzername und Passwort setzen",QMessageBox::AcceptRole);
+        msg.setIconPixmap(QPixmap("logomini.png"));
         int ret = msg.exec();
         switch(ret) {
         case QMessageBox::AcceptRole :
@@ -204,6 +208,7 @@ int cuedussmann::loadPWDUID()
             msg.setText("Die Passwörter sind ");
             msg.setWindowTitle("Keine Datei vorhanden.");
             msg.addButton("Benutzername und Passwort setzen",QMessageBox::AcceptRole);
+            msg.setIconPixmap(QPixmap("logomini.png"));
             int ret = msg.exec();
             switch(ret) {
             case QMessageBox::AcceptRole :

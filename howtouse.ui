@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Bedienungshinweise</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/logomini.png</normaloff>:/logomini.png</iconset>
+  </property>
   <widget class="QTextBrowser" name="textBrowser">
    <property name="geometry">
     <rect>
@@ -75,7 +79,9 @@ p, li { white-space: pre-wrap; }
   <tabstop>pushButton</tabstop>
   <tabstop>textBrowser</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>pushButton</sender>

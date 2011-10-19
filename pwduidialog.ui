@@ -13,7 +13,11 @@
   <property name="windowTitle">
    <string>Benutzername und Passwort setzen</string>
   </property>
-  <widget class="QWidget" name="">
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/logomini.png</normaloff>:/logomini.png</iconset>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -123,7 +127,9 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
