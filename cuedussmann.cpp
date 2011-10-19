@@ -66,10 +66,12 @@ int cuedussmann::initialize()
             msg.setText("Falsche Nutzernummer/Passwort Kombination");
             msg.setWindowTitle("Fehler beim Login");
             msg.addButton("Benutzername und Passwort neu setzen",QMessageBox::AcceptRole);
+            msg.setWindowIcon(QIcon(QPixmap(":/logomini.png")));
             int ret = msg.exec();
             if(ret==QMessageBox::AcceptRole)
             {
                 cuedussmann::on_actionUID_PWD_ndern_triggered();
+                if(wegonnaquit==27 && initialized==0) return 31; else return 0;
             }
         }
         if(log==2)
@@ -79,6 +81,7 @@ int cuedussmann::initialize()
             msg.setWindowTitle("Fehler beim Login");
             msg.setStandardButtons(QMessageBox::Abort);
             msg.addButton("Anderen Account einstellen",QMessageBox::AcceptRole);
+            msg.setWindowIcon(QIcon(QPixmap(":/logomini.png")));
             int ret = msg.exec();
             if(ret==QMessageBox::AcceptRole)
             {
@@ -96,6 +99,7 @@ int cuedussmann::initialize()
             msg.setText(QString::fromLocal8Bit("Es besteht keine Internetverbindung. Bitte versuche es später noch einmal"));
             msg.setWindowTitle(QString::fromLocal8Bit("Verbindungsfehler"));
             msg.setStandardButtons(QMessageBox::Ok);
+            msg.setWindowIcon(QIcon(QPixmap(":/logomini.png")));
             msg.exec();
             qApp->quit();
             return 28;
@@ -181,6 +185,7 @@ int cuedussmann::loadPWDUID()
         msg.setText("Die Studienzentrum-Version speichert keine Passwörter");
         msg.setWindowTitle("Besondere Version");
         msg.addButton("Benutzername und Passwort setzen",QMessageBox::AcceptRole);
+        msg.setWindowIcon(QIcon(QPixmap(":/logomini.png")));
         int ret = msg.exec();
         switch(ret) {
         case QMessageBox::AcceptRole :
@@ -243,7 +248,7 @@ void cuedussmann::on_actionUID_PWD_ndern_triggered()
         }
         initialized=initialize();
     }
-    else if (initialized==0) wegonnaquit=27;
+    else /*if (initialized==0)*/ wegonnaquit=27;
     delete dialog;
 }
 
