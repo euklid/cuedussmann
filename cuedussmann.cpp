@@ -977,11 +977,8 @@ int cuedussmann::getratingandbestelldaten()
                                                         tmp=frstln(tmp,100,"findoutput");
                                                         tmp=cut2(tmp," ",1,1);
                                                         bewertung=strcpy(bewertung,tmp);
-                                                        for(int n=0;n<strlen(bewertung);n++)
-                                                        {
-                                                                summand=10*summand+(bewertung[n]-48)*1;
-                                                        }
-                                                        bew+=summand;
+                                                        summand=QString::fromLocal8Bit(bewertung).toInt() ;
+                                                        if(summand>-1) bew+=summand; else bew+=-1000;
                                                 }
                                                 if((strlen(hackstring[k])>0) && (core::find(ratingfilename,alllow)==0))
                                                 {
@@ -992,18 +989,19 @@ int cuedussmann::getratingandbestelldaten()
                                                         summand=rate->ui->spinBox->value();
                                                         delete rate;
                                                         ratinglist=fopen(ratingfilename,"a+");
-                                                        if(summand<10)
+                                                        if(summand<10 && summand>-1)
                                                         {
                                                                 strcpy(storing,"  \0");
                                                                 storing[0]=48+summand;
                                                         }
                                                         if(summand==10) strcpy(storing,"10");
+                                                        if(summand==-1) strcpy(storing,"-1");
                                                         storing=strcat(storing," ");
                                                         storing=strcat(storing,alllow);
                                                         storing=strcat(storing,"\n");
                                                         fputs(storing,ratinglist);
                                                         fclose(ratinglist);
-                                                        bew+=summand;
+                                                        if(summand>-1) bew+=summand; else bew+=-1000;
                                                         } else
                                                         {
                                                             free(tmp);
@@ -1012,6 +1010,7 @@ int cuedussmann::getratingandbestelldaten()
                                                             free(bewertung);
                                                             free(hackstring);
                                                             free(storing);
+                                                            delete rate;
                                                             return 0;
                                                         }
                                                 }
@@ -1314,7 +1313,6 @@ void cuedussmann::on_actionEssen_bestellen_lassen_triggered() //now big fat rout
     free(ratings);
     initialized=0;
     initialized=initialize();
-
 }
 
 QString cuedussmann::nameday(int day)
