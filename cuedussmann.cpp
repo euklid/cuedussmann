@@ -28,6 +28,7 @@ This file is part of cuedussmann.
 #include <QTextStream>
 #include "howtouse.h"
 #include "thanks.h"
+#include "proxydialog.h"
 using namespace core;
 int*** changedmenu;
 cuedussmann::cuedussmann(QWidget *parent) :
@@ -54,7 +55,7 @@ cuedussmann::cuedussmann(QWidget *parent) :
 }
 
 int cuedussmann::initialize()
-{    
+{
     loadPWDUID();
     if(wegonnaquit==27) return 31;
     int log;
@@ -87,7 +88,7 @@ int cuedussmann::initialize()
             {
                 cuedussmann::on_actionUID_PWD_ndern_triggered();
             }
-            if(ret==262144 || ret==0) //is for acceptrole
+            if(ret==262144 || ret==0) //is for acceptrole abort
             {
                 qApp->quit(); return 31;
 
@@ -99,10 +100,17 @@ int cuedussmann::initialize()
             msg.setText(QString::fromLocal8Bit("Es besteht keine Internetverbindung. Bitte versuche es später noch einmal"));
             msg.setWindowTitle(QString::fromLocal8Bit("Verbindungsfehler"));
             msg.setStandardButtons(QMessageBox::Ok);
+            msg.addButton("Proxy festlegen",QMessageBox::AcceptRole);
             msg.setWindowIcon(QIcon(QPixmap(":/logomini.png")));
-            msg.exec();
-            qApp->quit();
-            return 28;
+            int ret=msg.exec();
+            if(ret==QMessageBox::AcceptRole)
+            {
+                on_actionProxy_einstellen_triggered();
+            } else
+            {
+                qApp->quit();
+                return 28;
+            }
         }
     }
     if(initialized==0)
@@ -341,7 +349,7 @@ void cuedussmann::createmenufiles()
         curl_easy_setopt(hnd, CURLOPT_WRITEDATA, menus[i]);
         curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
         curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=1;3");
-        curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
+        curl_easy_setopt(hnd, CURLOPT_PROXY, proxly);
         curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
         curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
         curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
@@ -1008,7 +1016,7 @@ int cuedussmann::getratingandbestelldaten()
                                 storing=strcat(storing,"\n");
                                 fputs(storing,ratinglist);
                                 fclose(ratinglist);
-                                bew+=summand;
+                                if(summand>-1) bew+=summand; else bew+=-1000;
                             } else
                             {
                                 free(tmp);
@@ -1188,7 +1196,7 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten für 
             curl_easy_setopt(hnd, CURLOPT_WRITEDATA, bestbest1[i]);
             curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
             curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=150;0;1;3");
-            curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
+            curl_easy_setopt(hnd, CURLOPT_PROXY, proxly);
             curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
             curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
             curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
@@ -1281,7 +1289,7 @@ void cuedussmann::sendbestellung() //hier muss sowohl das Senden der daten für 
             curl_easy_setopt(hnd2, CURLOPT_WRITEDATA, bestbest2[i]);
             curl_easy_setopt(hnd2, CURLOPT_INFILESIZE_LARGE, -1);
             curl_easy_setopt(hnd2, CURLOPT_URL, actionurl);
-            curl_easy_setopt(hnd2, CURLOPT_PROXY, NULL);
+            curl_easy_setopt(hnd2, CURLOPT_PROXY, proxly);
             curl_easy_setopt(hnd2, CURLOPT_PROXYUSERPWD, NULL);
             curl_easy_setopt(hnd2, CURLOPT_POSTFIELDS, postfield);
             curl_easy_setopt(hnd2, CURLOPT_REFERER, "http://dussmann-lpf.rcs.de/index.php?m=150;0;1;3");
@@ -1393,4 +1401,22 @@ void cuedussmann::on_action_ber_triggered()
 {
     Thanks *thank = new Thanks();
     thank->show();
+}
+
+void cuedussmann::on_actionProxy_einstellen_triggered()
+{
+    ProxyDialog pdia;
+    if(pdia.exec())
+    {
+        QString tmpprox;
+        tmpprox=pdia.ui->lineEdit->text()+QString(".")+pdia.ui->lineEdit_2->text()+QString(".")+pdia.ui->lineEdit_3->text()+QString(".")+pdia.ui->lineEdit_4->text()+QString(":")+pdia.ui->lineEdit_5->text();
+        if(tmpprox.length()>9)
+        {
+            if(proxly==NULL)
+            {
+                proxly=(char*)malloc(22*sizeof(char));
+            }
+            proxly=strcpy(proxly,qPrintable(tmpprox));
+        } else if(proxly != NULL) { free(proxly); proxly=NULL;}
+    }
 }

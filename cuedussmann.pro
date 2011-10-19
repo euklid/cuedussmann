@@ -16,20 +16,26 @@ SOURCES += main.cpp\
     pwduidialog.cpp \
     ratedialog.cpp \
     howtouse.cpp \
-    thanks.cpp
+    thanks.cpp \
+    proxydialog.cpp
 
 HEADERS  += cuedussmann.h \
     pwduidialog.h \
     ratedialog.h \
     howtouse.h \
-    thanks.h
+    thanks.h \
+    proxydialog.h
 
 FORMS    += cuedussmann.ui \
     pwduidialog.ui \
     ratedialog.ui \
     howtouse.ui \
-    thanks.ui
+    thanks.ui \
+    proxydialog.ui
 RESOURCES = res.qrc
+
+
+
 
 
 

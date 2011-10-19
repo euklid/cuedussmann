@@ -62,6 +62,8 @@ private slots:
 
     void on_action_ber_triggered();
 
+    void on_actionProxy_einstellen_triggered();
+
 private:
     int initialized;
     int initialize();

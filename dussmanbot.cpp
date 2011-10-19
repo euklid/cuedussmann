@@ -59,6 +59,7 @@ This file is part of cuedussmann.
  */
  
 namespace core {
+char* proxly=NULL;
 int loginandcookie(char* userid, char* passwd);
 int kalwochen(char* userid, char* passwd);
 void tagesauswahl();
@@ -448,8 +449,8 @@ int loginandcookie(char* userid, char* passwd)
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, essen);
 	curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
 	curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=1;3&a=akt_login");
-	curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
-	curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL); 
+        curl_easy_setopt(hnd, CURLOPT_PROXY, proxly);
+        curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
 	curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
  	curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
 	curl_easy_setopt(hnd, CURLOPT_COOKIEFILE, NULL);
@@ -1200,7 +1201,7 @@ void sendbestellung()//hier muss sowohl das Senden der daten für die Woche, als
 			curl_easy_setopt(hnd, CURLOPT_WRITEDATA, bestbest1[i]);
 			curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
 			curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?m=150;0;1;3");
-			curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
+                        curl_easy_setopt(hnd, CURLOPT_PROXY, proxly);
 			curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL); 
 			curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
 			curl_easy_setopt(hnd, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; U; Linux i686; de; rv:1.9.2.12) Gecko/20101027 Firefox/3.6.12");
@@ -1293,7 +1294,7 @@ void sendbestellung()//hier muss sowohl das Senden der daten für die Woche, als
 			curl_easy_setopt(hnd2, CURLOPT_WRITEDATA, bestbest2[i]);
 			curl_easy_setopt(hnd2, CURLOPT_INFILESIZE_LARGE, -1);
 			curl_easy_setopt(hnd2, CURLOPT_URL, actionurl);
-			curl_easy_setopt(hnd2, CURLOPT_PROXY, NULL);
+                        curl_easy_setopt(hnd2, CURLOPT_PROXY, proxly);
 			curl_easy_setopt(hnd2, CURLOPT_PROXYUSERPWD, NULL); 
 			curl_easy_setopt(hnd2, CURLOPT_POSTFIELDS, postfield);
 			curl_easy_setopt(hnd2, CURLOPT_REFERER, "http://dussmann-lpf.rcs.de/index.php?m=150;0;1;3");
@@ -1324,7 +1325,7 @@ void logout()
     //curl_easy_setopt(hnd2, CURLOPT_WRITEDATA, bestbest2[i]);
     curl_easy_setopt(hnd, CURLOPT_INFILESIZE_LARGE, -1);
     curl_easy_setopt(hnd, CURLOPT_URL, "http://dussmann-lpf.rcs.de/index.php?a=akt_logout");
-    curl_easy_setopt(hnd, CURLOPT_PROXY, NULL);
+    curl_easy_setopt(hnd, CURLOPT_PROXY, proxly);
     curl_easy_setopt(hnd, CURLOPT_PROXYUSERPWD, NULL);
     //curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, postfield);
    // curl_easy_setopt(hnd2, CURLOPT_REFERER, "http://dussmann-lpf.rcs.de/index.php?m=150;0;1;3");

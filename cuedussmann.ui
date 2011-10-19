@@ -447,8 +447,15 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
     <addaction name="action_ber"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
+   <widget class="QMenu" name="menuProxy">
+    <property name="title">
+     <string>Proxy</string>
+    </property>
+    <addaction name="actionProxy_einstellen"/>
+   </widget>
    <addaction name="menuAktion"/>
    <addaction name="menu_ber"/>
+   <addaction name="menuProxy"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionUID_PWD_ndern">
@@ -479,6 +486,11 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
   <action name="action_ber">
    <property name="text">
     <string>Über...</string>
+   </property>
+  </action>
+  <action name="actionProxy_einstellen">
+   <property name="text">
+    <string>Proxy einstellen</string>
    </property>
   </action>
  </widget>
