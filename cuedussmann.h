@@ -23,7 +23,7 @@ This file is part of cuedussmann.
 #include"ui_cuedussmann.h"
 class cuedussmann : public QMainWindow, public Ui::cuedussmann
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
     explicit cuedussmann(QWidget *parent = 0);

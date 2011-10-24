@@ -309,9 +309,10 @@ void cuedussmann::setcombobox(int startweek, int endweek)
 {
     for(int i=startweek; i<=endweek; i++)
     {
-        comboBox->removeItem(i-startweek);
-        comboBox->addItem(QString("Woche ")+QString::number(i)); //Therefore index 0 is standig for startweek, its slynumber can be access then by slynumber[0]
-        comboBox->setItemText(i-startweek,QString("Woche ")+QString::number(i));
+        if(comboBox->count()!= endweek-startweek+1)
+        {
+            comboBox->addItem(QString("Woche ")+QString::number(i)); //Therefore index 0 is standig for startweek, its slynumber can be access then by slynumber[0]
+        } else comboBox->setItemText(i-startweek,QString("Woche ")+QString::number(i));
     }
 }
 
