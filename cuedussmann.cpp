@@ -1421,3 +1421,55 @@ void cuedussmann::on_actionProxy_einstellen_triggered()
         } else if(proxly != NULL) { free(proxly); proxly=NULL;}
     }
 }
+
+void cuedussmann::on_actionVegetarische_Bestellung_triggered()
+{
+    for(int l=0;l<comboBox->count();l++)
+    {
+        parsemenufile(l);
+        for( int column=0;column<7;column++)
+        {
+            if(tableWidget->item(2,column)->flags()==Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable)
+            {
+                for(int i=0;i<3;i++)
+                {
+                    if((tableWidget->item(i,column)->background().color().red()>0) || (tableWidget->item(i,column)->background().color().green()>0))
+                    {
+                        ratings[l][column][i]=-1; //-1 should mean, that the day has been chosen manually and this menu must not be ordered
+                    }
+                    changedmenu[l][column][i]=0;
+                }
+                setdates[l][column]=1;
+                wirkbestellen[l][column]=1;
+                changedmenu[l][column][2]=1;
+                ratings[l][column][2]=11.0; //this will later on mean that the menu's components are not added to rating file and this menu will be definitely ordered.
+            }
+        }
+    }
+    gethiddenandbestellt(); //save data in the hidden, bergruen and bergruend arrays
+    getdatensatz();
+    for(int i=0; i<anzwoche;i++)
+    {
+        for(int j=0;j<7;j++)
+        {
+            if(wirkbestellen[i][j]==1)
+            {
+                    strcpy(bestelldaten[i][j],wocheplustagplusdaten[i][j][7]);
+                    strcat(bestelldaten[i][j],"=");
+                    strcat(bestelldaten[i][j],wocheplustagplusdaten[i][j][8]);
+            }
+        }
+    }
+    sendbestellung();
+    free(bestelldaten);
+    free(wocheplustagplusdaten);
+    anzwoche=0;startwoche=0;
+    free(wirkbestellen);
+    free(setdates);
+    free(slynmbwochen);
+    free(changedmenu);
+    free(ratings);
+    initialized=0;
+    initialized=initialize();
+
+}

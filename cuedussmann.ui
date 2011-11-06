@@ -437,6 +437,7 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
     </property>
     <addaction name="actionUID_PWD_ndern"/>
     <addaction name="actionEssen_bestellen_lassen"/>
+    <addaction name="actionVegetarische_Bestellung"/>
     <addaction name="actionSpeiseplan_drucken"/>
    </widget>
    <widget class="QMenu" name="menu_ber">
@@ -491,6 +492,11 @@ Wenn das Menü eines bereits bestellten Tages geändert wird, dann wird das Käs
   <action name="actionProxy_einstellen">
    <property name="text">
     <string>Proxy einstellen</string>
+   </property>
+  </action>
+  <action name="actionVegetarische_Bestellung">
+   <property name="text">
+    <string>Vegetarische Bestellung</string>
    </property>
   </action>
  </widget>

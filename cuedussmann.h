@@ -64,6 +64,8 @@ private slots:
 
     void on_actionProxy_einstellen_triggered();
 
+    void on_actionVegetarische_Bestellung_triggered();
+
 private:
     int initialized;
     int initialize();
