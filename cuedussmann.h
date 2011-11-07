@@ -59,9 +59,9 @@ private slots:
     void on_actionBedienungshinweise_triggered();
 
     void on_actionAbout_Qt_triggered();
-
     void on_action_ber_triggered();
 
+    void on_actionVegetarische_Bestellung_triggered();
 private:
     int initialized;
     int initialize();
