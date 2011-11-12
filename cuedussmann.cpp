@@ -21,7 +21,6 @@ This file is part of cuedussmann.
 #include "ratedialog.h"
 #include <QString>
 #include <QMessageBox>
-#include <QFile>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QTextDocument>
@@ -848,6 +847,78 @@ void cuedussmann::getdatensatz()
         }
 }
 
+void cuedussmann::getratingfile()
+{
+    ftpserver = new QFtp(this);
+    QString ratingfilename("ratings_");
+    ratingfilename.append(QString::fromLocal8Bit(uid));
+    ratingfile = new QFile(ratingfilename);
+    ratingfile->open(QIODevice::WriteOnly|QIODevice::Text);
+    connect(ftpserver,SIGNAL(commandFinished(int,bool)),this,SLOT(ftpcommandfinished(int,bool)));
+    ftpserver->connectToHost("cuedussmann.bplaced.de",21);
+    ftpserver->login("cuedussmann_bot","ratings");
+    ftpserver->get(ratingfilename,ratingfile);
+}
+
+void cuedussmann::ftpcommandfinished(int, bool error)
+{
+    if(ftpserver->currentCommand() == QFtp::Get)
+    {
+        ratingfile->close();
+        delete ratingfile;
+        if(getratingandbestelldaten())
+        {
+            sendbestellung();
+            uploadratingfile();
+        }
+    }
+
+    if(ftpserver->currentCommand() == QFtp::Put)
+    {
+        ratingfile->close();
+        delete ratingfile;
+        free(bestelldaten);
+        free(wocheplustagplusdaten);
+        anzwoche=0;startwoche=0;
+        free(wirkbestellen);
+        free(setdates);
+        free(slynmbwochen);
+        free(changedmenu);
+        free(ratings);
+        initialized=0;
+        initialized=initialize();
+    }
+    if((error) && ((ftpserver->currentCommand()==QFtp::Login) || (ftpserver->currentCommand()==QFtp::ConnectToHost)))
+    {
+        ratingfile->close();
+        delete ratingfile;
+        free(bestelldaten);
+        free(wocheplustagplusdaten);
+        anzwoche=0;startwoche=0;
+        free(wirkbestellen);
+        free(setdates);
+        free(slynmbwochen);
+        free(changedmenu);
+        free(ratings);
+        initialized=0;
+        initialized=initialize();
+        QMessageBox msg;
+        msg.setWindowTitle("FTP-Server-Verbindungsfehler");
+        msg.setText("Leider ist eine Fehler mit der Verbindung/Authentifizierung mit dem FTP-Server aufgetreten");
+        msg.show();
+    }
+}
+
+void cuedussmann::uploadratingfile()
+{
+    QString ratingfilename("ratings_");
+    ratingfilename.append(QString::fromLocal8Bit(uid));
+    ratingfile = new QFile(ratingfilename);
+    ratingfile->open(QIODevice::ReadOnly|QIODevice::Text);
+    ftpserver->put(ratingfile,ratingfilename);
+    ftpserver->close();
+}
+
 int cuedussmann::getratingandbestelldaten()
 {
         FILE* ratinglist;
@@ -1303,17 +1374,17 @@ void cuedussmann::on_actionEssen_bestellen_lassen_triggered() //now big fat rout
 {
     gethiddenandbestellt(); //save data in the hidden, bergruen and bergruend arrays
     getdatensatz();
-    if(getratingandbestelldaten()) sendbestellung();
-    free(bestelldaten);
-    free(wocheplustagplusdaten);
-    anzwoche=0;startwoche=0;
-    free(wirkbestellen);
-    free(setdates);
-    free(slynmbwochen);
-    free(changedmenu);
-    free(ratings);
-    initialized=0;
-    initialized=initialize();
+    getratingfile();// if(getratingandbestelldaten()) sendbestellung();
+//    free(bestelldaten);
+//    free(wocheplustagplusdaten);
+//    anzwoche=0;startwoche=0;
+//    free(wirkbestellen);
+//    free(setdates);
+//    free(slynmbwochen);
+//    free(changedmenu);
+//    free(ratings);
+//    initialized=0;
+//    initialized=initialize();
 }
 
 QString cuedussmann::nameday(int day)

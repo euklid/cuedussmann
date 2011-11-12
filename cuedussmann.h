@@ -21,6 +21,8 @@ This file is part of cuedussmann.
 
 #include <QMainWindow>
 #include"ui_cuedussmann.h"
+#include <QFile>
+#include <QFtp>
 class cuedussmann : public QMainWindow, public Ui::cuedussmann
 {
    Q_OBJECT
@@ -62,11 +64,16 @@ private slots:
     void on_action_ber_triggered();
 
     void on_actionVegetarische_Bestellung_triggered();
+
+    void ftpcommandfinished(int commandID, bool error);
+
 private:
     int initialized;
     int initialize();
     int loadPWDUID();
     int kalwochen();
+    void getratingfile();
+    void uploadratingfile();
     void getsel_datums();
     void setcombobox(int startweek, int endweek);
     void createmenufiles();
@@ -74,6 +81,8 @@ private:
     int getratingandbestelldaten();
     void sendbestellung();
     QString nameday(int day);
+    QFile* ratingfile;
+    QFtp* ftpserver;
     //int find(const char inputfile[], const char searchstring[], int linesafter=0);
 
 
